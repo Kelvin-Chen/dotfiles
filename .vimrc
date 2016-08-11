@@ -168,7 +168,7 @@ let delimitMate_expand_cr = 1
 " Add space after comments delimeter.
 let g:NERDSpaceDelims = 1
 
-let g:tmuxline_powerline_separators = 0
+let g:tmuxline_powerline_separators = 1
 
 let g:sexp_mappings = {
     \ 'sexp_round_head_wrap_element': '<LocalLeader>e(',
