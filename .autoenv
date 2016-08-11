@@ -1,0 +1,25 @@
+# Automatically search for python virtualenvs in the current and parent
+# directories and activate it if found.
+# The expected virtualenv name is ".env".
+
+activate_virtualenv () {
+    dir="$PWD"
+    while [[ "$PWD" != "/" ]]; do
+        source "$PWD/.env/bin/activate" 2> /dev/null && break || {
+            deactivate 2> /dev/null
+            builtin cd ..
+        }
+    done
+    builtin cd "$dir"
+}
+
+# Overwrite cd command to use run activate_virtualenv().
+cd () {
+    builtin cd "$@" && activate_virtualenv
+}
+
+# Run on shell startup just in case new shell is initialized in a
+# virtual env directory.
+activate_virtualenv
+
+# vim:ft=zsh:
