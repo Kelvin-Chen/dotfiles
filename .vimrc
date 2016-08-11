@@ -71,7 +71,7 @@ noremap k gk
 
 " Move between windows more easily
 if has('nvim')
-    nmap <BS> <C-W>h
+    nmap <BS> <C-h>
 endif
 nnoremap <C-j> <C-W>j
 nnoremap <C-k> <C-W>k
