@@ -10,11 +10,9 @@ plugins=(git docker docker-compose mosh tmux gnu-utils vagrant
 
 # Operating system specific configuration.
 if [[ "$(uname)" == "Darwin" ]]; then
-    source "$HOME/.zshrc_osx"
+    source "$HOME/.zshenv_mac"
 elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
-    source "$HOME/.zshrc_linux"
-elif [[ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]]; then
-    # Do something under Windows NT platform
+    source "$HOME/.zshenv_linux"
 fi
 
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
