@@ -7,6 +7,10 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 call plug#begin('~/.vim/plugged')
 
+function! DoRemote(arg)
+    UpdateRemotePlugins
+endfunction
+
 " Plugins
 Plug 'neovim/node-host', { 'do': 'npm install' }
 Plug 'christoomey/vim-tmux-navigator'
@@ -20,9 +24,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'jistr/vim-nerdtree-tabs'
-Plug 'majutsushi/tagbar'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --gocode-completer' }
-" Plug 'flazz/vim-colorschemes'
+Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle'}
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 Plug 'frankier/neovim-colors-solarized-truecolor-only'
 Plug 'Lokaltog/vim-easymotion'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -39,9 +42,12 @@ Plug 'nginx.vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'guns/vim-clojure-static'
 Plug 'guns/vim-sexp'
-Plug 'snoe/nvim-parinfer.js'
+Plug 'snoe/nvim-parinfer.js', { 'do': function('DoRemote') }
 Plug 'tpope/vim-fireplace'
 Plug 'JuliaLang/julia-vim'
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+Plug 'carlitux/deoplete-ternjs'
 
 
 " Fix weird issue where julia files have lisp syntax settings enabled.
@@ -81,6 +87,7 @@ nnoremap <C-l> <C-W>l
 " Vim airline settings
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tagbar#enabled = 0
 
 " Fugitive mappings
 nmap <leader>gc :Gcommit<cr>
@@ -157,11 +164,19 @@ let g:ctrlp_user_command = [
     \ 'cd %s && git ls-files -co --exclude-standard'
     \ ]
 
-" YouCompleteMe settings
-let g:ycm_seed_identifiers_with_syntax = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_cache_omnifunc = 0
-let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+" Deoplete settings
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
+inoremap <silent><expr> <S-Tab>
+            \ pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <silent><expr> <Tab>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<Tab>" :
+            \ deoplete#mappings#manual_complete()
+function! s:check_back_space() abort "{{{
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction"}}}
 
 let delimitMate_expand_cr = 1
 
