@@ -164,6 +164,14 @@ let g:ctrlp_user_command = [
     \ 'cd %s && git ls-files -co --exclude-standard'
     \ ]
 
+" Bind C-Space to omnicomplete
+inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
+            \ "\<lt>C-n>" :
+            \ "\<lt>C-x>\<lt>C-o><c-r>=pumvisible() ?" .
+            \ "\"\\<lt>c-n>\\<lt>c-p>\\<lt>c-n>\" :" .
+            \ "\" \\<lt>bs>\\<lt>C-n>\"\<CR>"
+imap <C-@> <C-Space>
+
 " Deoplete settings
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
