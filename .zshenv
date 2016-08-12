@@ -2,7 +2,7 @@
 export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load.
-ZSH_THEME="af-magic"
+ZSH_THEME="robbyrussell"
 
 # Oh-my-zsh plugins.
 plugins=(git docker docker-compose mosh tmux gnu-utils vagrant
