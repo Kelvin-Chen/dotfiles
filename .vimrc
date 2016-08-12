@@ -44,6 +44,7 @@ Plug 'guns/vim-clojure-static'
 Plug 'guns/vim-sexp'
 Plug 'snoe/nvim-parinfer.js', { 'do': function('DoRemote') }
 Plug 'tpope/vim-fireplace'
+Plug 'clojure-vim/async-clj-omni'
 Plug 'JuliaLang/julia-vim'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
