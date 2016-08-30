@@ -123,7 +123,7 @@ set hlsearch
 set colorcolumn=80
 
 " Colorscheme
-" set termguicolors
+set termguicolors
 set background=dark
 colorscheme solarized
 
