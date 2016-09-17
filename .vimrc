@@ -49,6 +49,7 @@ Plug 'JuliaLang/julia-vim'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'carlitux/deoplete-ternjs'
+Plug 'zchee/deoplete-jedi'
 
 
 " Fix weird issue where julia files have lisp syntax settings enabled.
