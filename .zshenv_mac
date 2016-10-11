@@ -1,1 +1,3 @@
 plugins+=(osx terminalapp brew brew-cask)
+
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
