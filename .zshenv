@@ -21,37 +21,19 @@ source "$ZSH/oh-my-zsh.sh"
 
 export LANG=en_US.UTF-8
 
+# Set vi/vim/nvim as $EDITOR and $GIT_EDITOR
 export EDITOR=vi
-
-alias config='git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
-
-# Use vim instead of vi if it exists.
 hash vim 2>/dev/null && {
     export EDITOR=vim
-    alias vi=vim
 }
-
-# Use neovim instead of vim if it exists.
 hash nvim 2>/dev/null && {
     export EDITOR=nvim
-    alias vi=nvim
-    alias vim=nvim
 }
-
 export GIT_EDITOR=$EDITOR
 
-alias compose=docker-compose
-# Clean up untagged images.
-docker-clean-images () {
-    docker rmi $(docker images -qf "dangling=true") 2> /dev/null
-}
-
-# List docker machines.
-alias dml="docker-machine ls"
-# Load docker-machine envs.
-dme () {
-    eval "$(docker-machine env $1)" 2> /dev/null
-}
+# Source aliases
+test -f "$HOME/.aliases" || touch "$HOME/.aliases"
+source "$HOME/.aliases"
 
 # Load my autoenv plugin.
 source "$HOME/.autoenv"

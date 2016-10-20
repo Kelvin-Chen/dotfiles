@@ -1,0 +1,20 @@
+# vi:ft=zsh
+
+alias config='git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
+
+alias vi="$EDITOR"
+alias vim="$EDITOR"
+
+alias compose=docker-compose
+
+# Clean up untagged images.
+docker-clean-images () {
+    docker rmi $(docker images -qf "dangling=true") 2> /dev/null
+}
+
+# List docker machines.
+alias dml="docker-machine ls"
+# Load docker-machine envs.
+dme () {
+    eval "$(docker-machine env $1)" 2> /dev/null
+}
