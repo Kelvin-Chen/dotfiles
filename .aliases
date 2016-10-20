@@ -18,3 +18,6 @@ alias dml="docker-machine ls"
 dme () {
     eval "$(docker-machine env $1)" 2> /dev/null
 }
+
+alias git-ignore="git update-index --assume-unchanged"
+alias git-track="git update-index --no-assume-unchanged"
