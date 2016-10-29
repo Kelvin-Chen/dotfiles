@@ -72,6 +72,8 @@ set modeline
 nmap <leader>w :w!<cr>
 nmap <leader>pp :setlocal paste!<cr>
 nmap <leader>cd :lcd %:p:h<cr>
+imap <C-L> <Esc>
+vmap <C-L> <Esc>
 
 " Treat long lines as break lines
 noremap j gj
