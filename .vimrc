@@ -50,6 +50,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'carlitux/deoplete-ternjs'
 Plug 'zchee/deoplete-jedi'
+Plug 'Rip-Rip/clang_complete', { 'do': 'make' }
 
 
 " Fix weird issue where julia files have lisp syntax settings enabled.
@@ -63,7 +64,7 @@ let mapleader=' '
 let maplocalleader=' '
 
 " Easier colon
-:nnoremap ; :
+nnoremap ; :
 
 " Allow vim to read modelines.
 set modeline
@@ -72,8 +73,8 @@ set modeline
 nmap <leader>w :w!<cr>
 nmap <leader>pp :setlocal paste!<cr>
 nmap <leader>cd :lcd %:p:h<cr>
-imap <C-L> <Esc>
-vmap <C-L> <Esc>
+inoremap jk <Esc>
+inoremap kj <Esc>
 
 " Treat long lines as break lines
 noremap j gj
@@ -203,3 +204,5 @@ let g:sexp_mappings = {
     \ }
 
 autocmd InsertEnter *.clj DelimitMateOff
+
+let g:clang_library_path='/opt/local/libexec/llvm-3.9/lib/libclang.dylib'
