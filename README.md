@@ -16,5 +16,15 @@ alias config='git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
 
 config config --local status.showUntrackedFiles no
 
+config reset --hard HEAD
+
 rm -rf ~/myconf-tmp/
+```
+
+# Some shell plugins
+These aren't managed by package managers so I have to install them separately
+```sh
+git clone git://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+git clone git://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 ```
