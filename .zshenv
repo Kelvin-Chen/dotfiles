@@ -36,7 +36,7 @@ test -f "$HOME/.aliases" || touch "$HOME/.aliases"
 source "$HOME/.aliases"
 
 # Load my autoenv plugin.
-source "$HOME/.autoenv"
+# source "$HOME/.autoenv"
 
 # Source machine specific configuration
 test -f "$HOME/.my_zsh_profile" || touch "$HOME/.my_zsh_profile"

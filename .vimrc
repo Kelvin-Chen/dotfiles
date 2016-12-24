@@ -51,6 +51,8 @@ Plug 'mxw/vim-jsx'
 Plug 'carlitux/deoplete-ternjs'
 Plug 'zchee/deoplete-jedi'
 Plug 'Rip-Rip/clang_complete', { 'do': 'make' }
+Plug 'neovimhaskell/haskell-vim'
+Plug 'alx741/vim-hindent'
 
 
 " Fix weird issue where julia files have lisp syntax settings enabled.
