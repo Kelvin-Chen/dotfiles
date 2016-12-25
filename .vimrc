@@ -13,6 +13,7 @@ endfunction
 
 " Plugins
 Plug 'neovim/node-host', { 'do': 'npm install' }
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'edkolev/tmuxline.vim'
 Plug 'tpope/vim-surround'
@@ -52,6 +53,8 @@ Plug 'carlitux/deoplete-ternjs'
 Plug 'zchee/deoplete-jedi'
 Plug 'Rip-Rip/clang_complete', { 'do': 'make' }
 Plug 'neovimhaskell/haskell-vim'
+Plug 'eagletmt/ghcmod-vim'
+Plug 'eagletmt/neco-ghc'
 Plug 'alx741/vim-hindent'
 
 
