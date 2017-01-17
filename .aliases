@@ -21,3 +21,7 @@ dme () {
 
 alias git-ignore="git update-index --assume-unchanged"
 alias git-track="git update-index --no-assume-unchanged"
+
+echo_ip () {
+    dig TXT +short o-o.myaddr.l.google.com @ns.google.com | sed "s/\"//g"
+}

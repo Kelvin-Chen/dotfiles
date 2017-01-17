@@ -6,7 +6,7 @@ ZSH_THEME="robbyrussell"
 
 # Oh-my-zsh plugins.
 plugins=(git docker docker-compose mosh tmux gnu-utils vagrant
-         zsh-autosuggestions zsh-syntax-highlighting)
+         virtualenvwrapper zsh-autosuggestions zsh-syntax-highlighting)
 
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
 
