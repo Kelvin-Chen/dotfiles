@@ -38,7 +38,7 @@ Plug 'lervag/vimtex'
 Plug 'junegunn/vim-easy-align'
 Plug 'fatih/vim-go'
 Plug 'ekalinin/Dockerfile.vim'
-Plug 'klen/python-mode'
+Plug 'python-mode/python-mode'
 Plug 'nginx.vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'guns/vim-clojure-static'
@@ -56,7 +56,6 @@ Plug 'neovimhaskell/haskell-vim'
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
 Plug 'alx741/vim-hindent'
-
 
 " Fix weird issue where julia files have lisp syntax settings enabled.
 autocmd BufRead,BufNewFile *.jl set filetype=julia
