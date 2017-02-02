@@ -1,6 +1,7 @@
 # vi:ft=zsh
 
-alias config='git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
+alias config='git --git-dir="$HOME/.myconf/" --work-tree="$HOME"'
+compdef config=git
 
 alias vi="$EDITOR"
 alias vim="$EDITOR"
