@@ -1,5 +1,3 @@
-setl formatprg=hindent
-
 let g:hindent_line_length = 80
 let g:haskell_enable_quantification = 1
 let g:haskell_enable_recursivedo = 1

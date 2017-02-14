@@ -1,5 +1,9 @@
 let &rtp = expand('~/.vim') . ',' . &rtp
 
+" Use virtualenv pythons for neovim
+let g:python_host_prog = '/Users/kelvin/.virtualenvs/neovim2/bin/python'
+let g:python3_host_prog = '/Users/kelvin/.virtualenvs/neovim3/bin/python'
+
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -31,6 +35,7 @@ Plug 'frankier/neovim-colors-solarized-truecolor-only'
 Plug 'Lokaltog/vim-easymotion'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'benekastah/neomake'
+Plug 'sbdchd/neoformat'
 Plug 'Raimondi/delimitMate'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'elzr/vim-json'
@@ -55,7 +60,6 @@ Plug 'Rip-Rip/clang_complete', { 'do': 'make' }
 Plug 'neovimhaskell/haskell-vim'
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
-Plug 'alx741/vim-hindent'
 
 " Fix weird issue where julia files have lisp syntax settings enabled.
 autocmd BufRead,BufNewFile *.jl set filetype=julia
@@ -131,7 +135,9 @@ set hlsearch
 set colorcolumn=80
 
 " Colorscheme
-set termguicolors
+if has('nvim')
+    set termguicolors
+endif
 set background=dark
 colorscheme solarized
 
@@ -209,4 +215,5 @@ let g:sexp_mappings = {
 
 autocmd InsertEnter *.clj DelimitMateOff
 
-let g:clang_library_path='/opt/local/libexec/llvm-3.9/lib/libclang.dylib'
+let g:clang_library_path='/Library/Developer/CommandLineTools/usr/lib/libclang.dylib'
+" let g:clang_library_path='/opt/local/libexec/llvm-3.9/lib/libclang.dylib'
