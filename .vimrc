@@ -1,8 +1,8 @@
 let &rtp = expand('~/.vim') . ',' . &rtp
 
-" Use virtualenv pythons for neovim
-let g:python_host_prog = '/Users/kelvin/.virtualenvs/neovim2/bin/python'
-let g:python3_host_prog = '/Users/kelvin/.virtualenvs/neovim3/bin/python'
+" Use system Python for Neovim
+let g:python_host_prog = '/usr/local/bin/python'
+let g:python3_host_prog = '/usr/local/bin/python3'
 
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -171,6 +171,15 @@ let g:neomake_warning_sign = {
     \ 'text': '>>',
     \ 'texthl': 'ErrorMsg',
     \ }
+nnoremap <F2> :Neomake<CR>
+
+" Run Neoformat on save and trim trailing whitespace
+" augroup fmt
+    " autocmd!
+    " autocmd BufWritePre * Neoformat
+" augroup END<Paste>
+let g:neoformat_basic_format_trim = 1
+nnoremap <F3> :Neoformat<CR>
 
 " Let CtrlP ignore files in gitignore.
 let g:ctrlp_user_command = [

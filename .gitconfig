@@ -14,3 +14,5 @@
 	diffFilter = diff-so-fancy
 [remote "origin"]
 	prune = true
+[commit]
+	gpgsign = true

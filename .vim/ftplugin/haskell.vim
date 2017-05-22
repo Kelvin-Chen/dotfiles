@@ -1,4 +1,5 @@
-let g:hindent_line_length = 80
+setl sw=2
+
 let g:haskell_enable_quantification = 1
 let g:haskell_enable_recursivedo = 1
 let g:haskell_enable_arrowsyntax = 1
