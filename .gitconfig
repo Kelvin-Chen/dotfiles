@@ -1,7 +1,7 @@
 [user]
 	name = Kelvin Chen
 	email = kelvin@kelvinchen.org
-	signingkey = C10DF004
+	signingkey = 63CF0155
 [push]
 	default = simple
 [diff]

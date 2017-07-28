@@ -1,8 +1,8 @@
 let &rtp = expand('~/.vim') . ',' . &rtp
 
 " Use system Python for Neovim
-let g:python_host_prog = '/usr/local/bin/python'
-let g:python3_host_prog = '/usr/local/bin/python3'
+let g:python_host_prog = '/usr/bin/python2'
+let g:python3_host_prog = '/usr/bin/python3'
 
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -55,7 +55,6 @@ Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'carlitux/deoplete-ternjs'
 Plug 'zchee/deoplete-jedi'
-Plug 'Rip-Rip/clang_complete', { 'do': 'make' }
 Plug 'neovimhaskell/haskell-vim'
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
@@ -222,6 +221,3 @@ let g:sexp_mappings = {
     \ }
 
 autocmd InsertEnter *.clj DelimitMateOff
-
-let g:clang_library_path='/Library/Developer/CommandLineTools/usr/lib/libclang.dylib'
-" let g:clang_library_path='/opt/local/libexec/llvm-3.9/lib/libclang.dylib'
