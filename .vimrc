@@ -16,7 +16,7 @@ function! DoRemote(arg)
 endfunction
 
 " Plugins
-Plug 'neovim/node-host', { 'do': 'npm install' }
+Plug 'neovim/node-host', { 'do': 'npm install -g neovim' }
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'edkolev/tmuxline.vim'
