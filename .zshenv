@@ -1,12 +1,23 @@
-# Path to oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+# Load antigen
+source "$HOME/antigen.zsh"
 
-# Set name of the theme to load.
-ZSH_THEME="robbyrussell"
+# Use oh-my-zsh library
+antigen use oh-my-zsh
 
-# Oh-my-zsh plugins.
-plugins=(git docker docker-compose mosh tmux gnu-utils vagrant
-         zsh-autosuggestions zsh-syntax-highlighting)
+export NVM_LAZY_LOAD=true
+
+# Plugins
+antigen bundle docker
+antigen bundle docker-compose
+antigen bundle git
+antigen bundle gnu-utils
+antigen bundle lein
+antigen bundle lukechilds/zsh-nvm
+antigen bundle tmux
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-autosuggestions
+
+antigen theme robbyrussell
 
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
 
@@ -17,7 +28,7 @@ elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
     source "$HOME/.zshenv_linux"
 fi
 
-source "$ZSH/oh-my-zsh.sh"
+antigen apply
 
 export LANG=en_US.UTF-8
 
@@ -34,9 +45,6 @@ export GIT_EDITOR=$EDITOR
 # Source aliases
 test -f "$HOME/.aliases" || touch "$HOME/.aliases"
 source "$HOME/.aliases"
-
-# Load my autoenv plugin.
-# source "$HOME/.autoenv"
 
 # Source machine specific configuration
 test -f "$HOME/.my_zsh_profile" || touch "$HOME/.my_zsh_profile"

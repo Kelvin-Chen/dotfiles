@@ -1,3 +1,5 @@
-plugins+=(osx terminalapp brew-cask)
+antigen bundle osx
+antigen bundle terminalapp
+antigen bundle brew-cask
 
 export PATH="$HOME/.local/bin:/opt/local/bin:/opt/local/sbin:$PATH"
