@@ -1,4 +1,5 @@
 # Load antigen
+ANTIGEN_CACHE=false
 source "$HOME/antigen.zsh"
 
 # Use oh-my-zsh library
