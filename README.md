@@ -19,5 +19,5 @@ config reset --hard HEAD
 
 rm -rf ~/myconf-tmp/
 
-curl -sL git.io/antigen > "$HOME/antigen.zsh"
+curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
 ```
