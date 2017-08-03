@@ -14,4 +14,4 @@ export GIT_EDITOR=$EDITOR
 
 export PAGER=less
 
-export NVM_LAZY_LOAD=true
+export NVM_LAZY_LOAD=false

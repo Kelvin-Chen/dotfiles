@@ -4,6 +4,8 @@ source ~/.zplug/init.zsh
 #####################
 #      Plugins
 #####################
+zplug "lib/clipboard", from:oh-my-zsh
+zplug "lib/completion", from:oh-my-zsh
 zplug "lukechilds/zsh-nvm"
 zplug "plugins/brew-cask", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 zplug "plugins/docker", from:oh-my-zsh
@@ -14,8 +16,9 @@ zplug "plugins/lein", from:oh-my-zsh
 zplug "plugins/osx", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 zplug "plugins/terminalapp", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 zplug "plugins/tmux", from:oh-my-zsh
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 zplug "zsh-users/zsh-autosuggestions", defer:2
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 zplug 'dracula/zsh', as:theme
 
