@@ -39,7 +39,8 @@ Plug 'Lokaltog/vim-easymotion'
 Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle'}
 Plug 'mxw/vim-jsx'
 Plug 'neovimhaskell/haskell-vim'
-Plug 'neovim/node-host', { 'do': 'npm install -g neovim' }
+" Plug 'neovim/node-host', { 'do': 'npm install -g neovim' }
+Plug 'neovim/node-host', { 'do': 'npm install', 'tag': 'v0.0.1' }
 Plug 'pangloss/vim-javascript'
 Plug 'plasticboy/vim-markdown'
 Plug 'python-mode/python-mode'

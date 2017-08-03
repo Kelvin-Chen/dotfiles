@@ -26,3 +26,5 @@ alias git-track="git update-index --no-assume-unchanged"
 echo_ip () {
     dig TXT +short o-o.myaddr.l.google.com @ns.google.com | sed "s/\"//g"
 }
+
+alias emacs="emacs -nw"
