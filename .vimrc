@@ -16,53 +16,54 @@ function! DoRemote(arg)
 endfunction
 
 " Plugins
-Plug 'neovim/node-host', { 'do': 'npm install -g neovim' }
-Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'edkolev/tmuxline.vim'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-git'
-Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'scrooloose/nerdcommenter'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'jistr/vim-nerdtree-tabs'
-Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle'}
-Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
-Plug 'frankier/neovim-colors-solarized-truecolor-only'
-Plug 'Lokaltog/vim-easymotion'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'benekastah/neomake'
-Plug 'sbdchd/neoformat'
-Plug 'Raimondi/delimitMate'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'elzr/vim-json'
-Plug 'lervag/vimtex'
-Plug 'junegunn/vim-easy-align'
-Plug 'fatih/vim-go'
-Plug 'ekalinin/Dockerfile.vim'
-Plug 'python-mode/python-mode'
-Plug 'plasticboy/vim-markdown'
-Plug 'guns/vim-clojure-static'
-Plug 'guns/vim-sexp'
-Plug 'snoe/nvim-parinfer.js', { 'do': function('DoRemote') }
-Plug 'tpope/vim-fireplace'
-Plug 'clojure-vim/async-clj-omni'
-Plug 'JuliaLang/julia-vim'
-Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
 Plug 'carlitux/deoplete-ternjs'
-Plug 'zchee/deoplete-jedi'
-Plug 'neovimhaskell/haskell-vim'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'clojure-vim/async-clj-omni'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
+Plug 'edkolev/tmuxline.vim'
+Plug 'ekalinin/Dockerfile.vim'
+Plug 'elzr/vim-json'
+Plug 'fatih/vim-go'
+Plug 'frankier/neovim-colors-solarized-truecolor-only'
+Plug 'guns/vim-clojure-static'
+Plug 'guns/vim-sexp'
+Plug 'jistr/vim-nerdtree-tabs'
+Plug 'JuliaLang/julia-vim'
+Plug 'junegunn/vim-easy-align'
+Plug 'lervag/vimtex'
+Plug 'Lokaltog/vim-easymotion'
+Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle'}
+Plug 'mxw/vim-jsx'
+Plug 'neovimhaskell/haskell-vim'
+Plug 'neovim/node-host', { 'do': 'npm install -g neovim' }
+Plug 'pangloss/vim-javascript'
+Plug 'plasticboy/vim-markdown'
+Plug 'python-mode/python-mode'
+Plug 'Raimondi/delimitMate'
+Plug 'sbdchd/neoformat'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+Plug 'snoe/nvim-parinfer.js', { 'do': function('DoRemote') }
+Plug 'terryma/vim-multiple-cursors'
+Plug 'tpope/vim-fireplace'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-git'
+Plug 'tpope/vim-surround'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'zchee/deoplete-jedi'
 
 " Fix weird issue where julia files have lisp syntax settings enabled.
 autocmd BufRead,BufNewFile *.jl set filetype=julia
 
 call plug#end()
+
 filetype plugin indent on
 
 " Map leaders
