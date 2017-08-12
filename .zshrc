@@ -18,6 +18,7 @@ zplug "plugins/terminalapp", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 zplug "plugins/tmux", from:oh-my-zsh
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 zplug "zsh-users/zsh-autosuggestions", defer:2
+zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 zplug 'dracula/zsh', as:theme
