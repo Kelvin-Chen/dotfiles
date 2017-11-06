@@ -6,6 +6,8 @@ source ~/.zplug/init.zsh
 #####################
 zplug "lib/clipboard", from:oh-my-zsh
 zplug "lib/completion", from:oh-my-zsh
+zplug "lib/history", from:oh-my-zsh
+zplug "lib/key-bindings", from:oh-my-zsh
 zplug "lukechilds/zsh-nvm"
 zplug "plugins/brew-cask", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 zplug "plugins/docker", from:oh-my-zsh
