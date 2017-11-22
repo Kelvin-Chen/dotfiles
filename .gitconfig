@@ -4,6 +4,7 @@
 	signingkey = 63CF0155
 [push]
 	default = simple
+	followTags = true
 [diff]
 	compactionHeuristic = true
 [pager]
