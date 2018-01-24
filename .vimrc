@@ -213,6 +213,14 @@ function! s:check_back_space() abort "{{{
     return !col || getline('.')[col - 1]  =~ '\s'
 endfunction"}}}
 
+" Fix multiple-cursors and deoplete conflict
+func! Multiple_cursors_before()
+    call deoplete#init#_disable()
+endfunc
+func! Multiple_cursors_after()
+    call deoplete#init#_enable()
+endfunc
+
 let delimitMate_expand_cr = 1
 
 " Add space after comments delimeter.
