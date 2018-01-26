@@ -6,6 +6,10 @@
     ],
     "plugins": {
         "node": {},
-        "es_modules": {}
+        "es_modules": {},
+        "doc_comment": {
+            "fullDocs": true,
+            "strong": true
+        }
     }
 }
