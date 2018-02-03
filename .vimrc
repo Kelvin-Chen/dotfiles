@@ -27,8 +27,6 @@ Plug 'carlitux/deoplete-ternjs'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'clojure-vim/async-clj-omni'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'eagletmt/ghcmod-vim'
-Plug 'eagletmt/neco-ghc'
 Plug 'edkolev/tmuxline.vim'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'elzr/vim-json'
@@ -62,6 +60,7 @@ Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'zchee/deoplete-jedi'
+Plug 'chase/vim-ansible-yaml'
 
 " Fix weird issue where julia files have lisp syntax settings enabled.
 autocmd BufRead,BufNewFile *.jl set filetype=julia
