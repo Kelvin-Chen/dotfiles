@@ -61,6 +61,9 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'zchee/deoplete-jedi'
 Plug 'chase/vim-ansible-yaml'
+Plug 'vim-scripts/haproxy'
+Plug 'benjie/neomake-local-eslint.vim'
+Plug 'chr4/nginx.vim'
 
 " Fix weird issue where julia files have lisp syntax settings enabled.
 autocmd BufRead,BufNewFile *.jl set filetype=julia
