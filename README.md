@@ -20,4 +20,6 @@ config reset --hard HEAD
 rm -rf ~/myconf-tmp/
 
 curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+
+config submodule update --init --recursive
 ```
