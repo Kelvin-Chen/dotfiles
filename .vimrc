@@ -31,7 +31,7 @@ Plug 'edkolev/tmuxline.vim'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'elzr/vim-json'
 Plug 'fatih/vim-go'
-Plug 'frankier/neovim-colors-solarized-truecolor-only'
+Plug 'chriskempson/base16-vim'
 Plug 'guns/vim-clojure-static'
 Plug 'guns/vim-sexp'
 Plug 'jistr/vim-nerdtree-tabs'
@@ -144,7 +144,7 @@ if has('nvim')
     set termguicolors
 endif
 set background=dark
-colorscheme solarized
+colorscheme base16-default-dark
 
 " Disable backup
 set noswapfile
