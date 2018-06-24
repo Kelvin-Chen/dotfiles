@@ -106,6 +106,11 @@ nnoremap <C-l> <C-W>l
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tagbar#enabled = 0
+let g:airline#extensions#tmuxline#enabled = 0
+
+" Tmuxline settings
+let g:tmuxline_powerline_separators = 1
+let g:tmuxline_theme = 'vim_statusline_3'
 
 " Fugitive mappings
 nmap <leader>gc :Gcommit<cr>
@@ -227,8 +232,6 @@ let delimitMate_expand_cr = 1
 
 " Add space after comments delimeter.
 let g:NERDSpaceDelims = 1
-
-let g:tmuxline_powerline_separators = 1
 
 let g:sexp_mappings = {
     \ 'sexp_round_head_wrap_element': '<LocalLeader>e(',
