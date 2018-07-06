@@ -145,11 +145,10 @@ set hlsearch
 set colorcolumn=80
 
 " Colorscheme
-if has('nvim')
-    set termguicolors
+if filereadable(expand("~/.vimrc_background"))
+    let base16colorspace=256
+    source ~/.vimrc_background
 endif
-set background=dark
-colorscheme base16-default-dark
 
 " Disable backup
 set noswapfile
