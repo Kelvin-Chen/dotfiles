@@ -1,19 +1,28 @@
 [user]
-	name = Kelvin Chen
-	email = kelvin@kelvinchen.org
-	signingkey = 63CF0155
+    name = Kelvin Chen
+    email = kelvin@kelvinchen.org
+    # Add email to ~/.config/git/gitconfig to override
 [push]
-	default = simple
-	followTags = true
+    default = simple
+    followTags = true
 [diff]
-	compactionHeuristic = true
+    compactionHeuristic = true
 [pager]
-	log = diff-so-fancy | $PAGER
-	show = diff-so-fancy | $PAGER
-	diff = diff-so-fancy | $PAGER
+    log = diff-so-fancy | $PAGER
+    show = diff-so-fancy | $PAGER
+    diff = diff-so-fancy | $PAGER
 [interactive]
-	diffFilter = diff-so-fancy
+    diffFilter = diff-so-fancy
 [remote "origin"]
-	prune = true
-[commit]
-	gpgsign = true
+    prune = true
+[color]
+    ui = auto
+[core]
+    pager = less -FMRiX
+    excludesfile = .config/git/excludes
+[alias]
+    dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)%an <%ae>%C(reset) %C(magenta)%cr%C(reset)%C(auto)%d%C(reset)%n%s' --date-order
+
+# Machine specific configuration
+[include]
+    path = .config/git/gitconfig
