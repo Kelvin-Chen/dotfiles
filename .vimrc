@@ -15,11 +15,6 @@ function! DoRemote(arg)
     UpdateRemotePlugins
 endfunction
 
-function! SetupParinfer(arg)
-    !lein npm install
-    UpdateRemotePlugins
-endfunction
-
 " Plugins
 Plug 'airblade/vim-gitgutter'
 Plug 'benekastah/neomake'
@@ -51,7 +46,6 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'snoe/nvim-parinfer.js', { 'do': function('SetupParinfer') }
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-fugitive'
