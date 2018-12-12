@@ -28,3 +28,5 @@ echo_ip () {
 }
 
 alias emacs="emacs -nw"
+
+alias ls='ls -lG'
