@@ -30,3 +30,5 @@ echo_ip () {
 alias emacs="emacs -nw"
 
 alias ls='ls -lG'
+
+alias fzfc='grep --line-buffered --color=never -r "" * | fzf'
