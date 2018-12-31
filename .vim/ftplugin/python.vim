@@ -6,5 +6,3 @@ let g:pymode_rope = 0
 
 let g:pymode_rope_goto_definition_bind = '<C-]>'
 let g:pymode_breakpoint_bind = '<leader>B'
-
-let g:deoplete#sources#jedi#show_docstring = 1

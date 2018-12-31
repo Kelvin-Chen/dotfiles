@@ -1,4 +1,3 @@
-let g:neomake_javascript_enabled_makers = ['eslint']
 let g:jsx_ext_required = 0
 
 let g:tern_request_timeout = 1

@@ -15,49 +15,46 @@ function! DoRemote(arg)
     UpdateRemotePlugins
 endfunction
 
-" Plugins
+" UX Plugins
 Plug 'airblade/vim-gitgutter'
-Plug 'benekastah/neomake'
-Plug 'carlitux/deoplete-ternjs'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'clojure-vim/async-clj-omni'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'edkolev/tmuxline.vim'
+Plug 'junegunn/vim-easy-align'
+Plug 'Lokaltog/vim-easymotion'
+Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle'}
+Plug 'Raimondi/delimitMate'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'terryma/vim-multiple-cursors'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'w0rp/ale'
+
+" UI Plugins
+Plug 'chriskempson/base16-vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" Language Plugins
+Plug 'chr4/nginx.vim'
+Plug 'clojure-vim/async-clj-omni'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'elzr/vim-json'
 Plug 'fatih/vim-go'
-Plug 'chriskempson/base16-vim'
 Plug 'guns/vim-clojure-static'
 Plug 'guns/vim-sexp'
-Plug 'jistr/vim-nerdtree-tabs'
 Plug 'JuliaLang/julia-vim'
-Plug 'junegunn/vim-easy-align'
 Plug 'lervag/vimtex'
-Plug 'Lokaltog/vim-easymotion'
-Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle'}
 Plug 'mxw/vim-jsx'
 Plug 'neovimhaskell/haskell-vim'
 Plug 'pangloss/vim-javascript'
 Plug 'plasticboy/vim-markdown'
 Plug 'python-mode/python-mode'
-Plug 'Raimondi/delimitMate'
-Plug 'sbdchd/neoformat'
-Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
-Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-fireplace'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
-Plug 'tpope/vim-surround'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'zchee/deoplete-jedi'
-Plug 'chase/vim-ansible-yaml'
 Plug 'vim-scripts/haproxy'
-Plug 'benjie/neomake-local-eslint.vim'
-Plug 'chr4/nginx.vim'
+
 
 " Fix weird issue where julia files have lisp syntax settings enabled.
 autocmd BufRead,BufNewFile *.jl set filetype=julia
@@ -164,27 +161,6 @@ set wrap
 " Always show status bar
 set laststatus=2
 
-" Neomake options
-autocmd! BufWritePost * Neomake
-let g:neomake_open_list = 2
-let g:neomake_error_sign = {
-    \ 'text': '>>',
-    \ 'texthl': 'ErrorMsg',
-    \ }
-let g:neomake_warning_sign = {
-    \ 'text': '>>',
-    \ 'texthl': 'ErrorMsg',
-    \ }
-nnoremap <F2> :Neomake<CR>
-
-" Run Neoformat on save and trim trailing whitespace
-" augroup fmt
-    " autocmd!
-    " autocmd BufWritePre * Neoformat
-" augroup END<Paste>
-let g:neoformat_basic_format_trim = 1
-nnoremap <F3> :Neoformat<CR>
-
 " Let CtrlP ignore files in gitignore.
 let g:ctrlp_user_command = [
     \ '.git',
@@ -199,28 +175,6 @@ inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
             \ "\" \\<lt>bs>\\<lt>C-n>\"\<CR>"
 imap <C-@> <C-Space>
 
-" Deoplete settings
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
-inoremap <silent><expr> <S-Tab>
-            \ pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <silent><expr> <Tab>
-            \ pumvisible() ? "\<C-n>" :
-            \ <SID>check_back_space() ? "\<Tab>" :
-            \ deoplete#mappings#manual_complete()
-function! s:check_back_space() abort "{{{
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-endfunction"}}}
-
-" Fix multiple-cursors and deoplete conflict
-func! Multiple_cursors_before()
-    call deoplete#init#_disable()
-endfunc
-func! Multiple_cursors_after()
-    call deoplete#init#_enable()
-endfunc
-
 let delimitMate_expand_cr = 1
 
 " Add space after comments delimeter.
@@ -231,4 +185,7 @@ let g:sexp_mappings = {
     \ 'sexp_round_tail_wrap_element': '<LocalLeader>e)',
     \ }
 
+" Turn off delimitmate for clojure
 autocmd InsertEnter *.clj DelimitMateOff
+
+let g:ale_completion_enabled = 1
