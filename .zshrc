@@ -39,8 +39,9 @@ test -f "$HOME/.aliases" || touch "$HOME/.aliases"
 source "$HOME/.aliases"
 
 # Source machine specific configuration
-test -f "$HOME/.my_zsh_profile" || touch "$HOME/.my_zsh_profile"
-source "$HOME/.my_zsh_profile"
+LOCAL_ZSHRC="$HOME/.zshrc_local"
+test -f "$LOCAL_ZSHRC" || touch "$LOCAL_ZSHRC"
+source "$LOCAL_ZSHRC"
 
 # Base16 Shell
 # https://github.com/chriskempson/base16-shell
