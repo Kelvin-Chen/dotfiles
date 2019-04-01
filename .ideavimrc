@@ -2,3 +2,6 @@ source ~/.vimrc
 
 set surround
 set multiple-cursors
+
+nnoremap <C-]> <C-]>
+nnoremap <S-k> <S-k>

@@ -1,8 +1,8 @@
 let &rtp = expand('~/.vim') . ',' . &rtp
 
 " Use system Python for Neovim
-let g:python_host_prog = '/usr/bin/python2'
-let g:python3_host_prog = '/usr/bin/python3'
+let g:python_host_prog = '/usr/local/bin/python2'
+let g:python3_host_prog = '/usr/local/bin/python3'
 
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -41,6 +41,7 @@ Plug 'chr4/nginx.vim'
 Plug 'clojure-vim/async-clj-omni'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'elzr/vim-json'
+Plug 'HerringtonDarkholme/yats.vim'
 Plug 'fatih/vim-go'
 Plug 'guns/vim-clojure-static'
 Plug 'guns/vim-sexp'
@@ -53,6 +54,7 @@ Plug 'plasticboy/vim-markdown'
 Plug 'python-mode/python-mode'
 Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-git'
+Plug 'vim-ruby/vim-ruby'
 Plug 'vim-scripts/haproxy'
 
 
@@ -188,4 +190,13 @@ let g:sexp_mappings = {
 " Turn off delimitmate for clojure
 autocmd InsertEnter *.clj DelimitMateOff
 
+" vim-ale settings
+nnoremap <C-]> :ALEGoToDefinitionInTab<cr>
+nnoremap <S-k> :ALEHover<cr>
 let g:ale_completion_enabled = 1
+let g:ale_set_highlights = 0
+let g:ale_fixers = {
+            \ 'ruby': ['rubocop'],
+            \ 'typescript': ['tslint']
+            \ }
+set completeopt=menu,menuone,preview,noselect,noinsert
