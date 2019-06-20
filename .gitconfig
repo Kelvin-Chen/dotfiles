@@ -7,10 +7,6 @@
     followTags = true
 [diff]
     compactionHeuristic = true
-[pager]
-    log = diff-so-fancy | $PAGER
-    show = diff-so-fancy | $PAGER
-    diff = diff-so-fancy | $PAGER
 [interactive]
     diffFilter = diff-so-fancy
 [remote "origin"]

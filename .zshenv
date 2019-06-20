@@ -20,3 +20,8 @@ export NVM_LAZY_LOAD=false
 if [[ -n "$ANDROID_HOME" ]]; then
     export PATH="$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin"
 fi
+
+# Source machine specific configuration
+LOCAL_ZSHENV="$HOME/.zshenv_local"
+test -f "$LOCAL_ZSHENV" || touch "$LOCAL_ZSHENV"
+source "$LOCAL_ZSHENV"
