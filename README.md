@@ -1,9 +1,14 @@
 # Config
-Repo to store dotfiles and other configuration. Using it is the same as git
-except `git` is replaced with `config`.  For example, to add a file `foo` just
-do `config add foo` followed with `config commit` and `config push`.
 
-# Installing
+## Overview
+
+This is a repo to store dotfiles and other configuration.
+It is implemented as a git repository with the working tree rooted to the
+home directory.
+Manipulation of this repo is done with the `config` alias.
+
+## Installing
+
 ```sh
 git clone --separate-git-dir="$HOME/.myconf" \
     git@github.com:Kelvin-Chen/config.git \
