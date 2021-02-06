@@ -1,6 +1,6 @@
 export LANG=en_US.UTF-8
 
-export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
+export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 # Set vi/vim/nvim as $EDITOR and $GIT_EDITOR
 export EDITOR=vi
