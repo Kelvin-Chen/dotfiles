@@ -11,10 +11,8 @@ zplug "lib/key-bindings", from:oh-my-zsh
 zplug "lukechilds/zsh-nvm"
 zplug "plugins/brew-cask", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 zplug "plugins/docker", from:oh-my-zsh
-zplug "plugins/docker-compose", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/gnu-utils", from:oh-my-zsh
-zplug "plugins/lein", from:oh-my-zsh
 zplug "plugins/osx", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 zplug "plugins/terminalapp", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 zplug "plugins/tmux", from:oh-my-zsh
