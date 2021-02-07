@@ -2,10 +2,10 @@
 
 ## Overview
 
-This is a repo to store dotfiles and other configuration.
-It is implemented as a git repository with the working tree rooted to the
-home directory.
-Manipulation of this repo is done with the `config` alias.
+This is a repo to store dotfiles and other configuration. It is implemented
+as a git repository with the working tree rooted to the home directory.
+
+The `config` command is aliased to git with the worktree set to `$HOME`.
 
 ## Installing
 
@@ -14,7 +14,7 @@ git clone --separate-git-dir="$HOME/.myconf" \
     git@github.com:Kelvin-Chen/config.git \
     "$HOME/myconf-tmp"
 
-cp ~/myconf-tmp/.gitmodules ~ # For submodules
+cp ~/myconf-tmp/.gitmodules $HOME
 
 alias config='git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
 
