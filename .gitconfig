@@ -7,8 +7,6 @@
     followTags = true
 [diff]
     compactionHeuristic = true
-[interactive]
-    diffFilter = diff-so-fancy
 [remote "origin"]
     prune = true
 [color]
@@ -18,12 +16,12 @@
     excludesfile = ~/.config/git/excludes
 [alias]
     dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)%an <%ae>%C(reset) %C(magenta)%cr%C(reset)%C(auto)%d%C(reset)%n%s' --date-order
-
-# Machine specific configuration
-[include]
-    path = .config/git/gitconfig
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+
+# Machine specific configuration
+[include]
+    path = .config/git/gitconfig
