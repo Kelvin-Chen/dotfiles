@@ -1,6 +1,6 @@
 [user]
     name = Kelvin Chen
-    email = kelvin@kelvinchen.org
+    email = kelvin@chen.fm
     # Add email to ~/.config/git/gitconfig to override
 [push]
     default = simple
