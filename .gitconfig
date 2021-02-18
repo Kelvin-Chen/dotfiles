@@ -5,6 +5,8 @@
 [push]
     default = simple
     followTags = true
+[pull]
+	ff = only
 [diff]
     compactionHeuristic = true
 [remote "origin"]
