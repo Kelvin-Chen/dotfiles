@@ -6,10 +6,10 @@
     default = simple
     followTags = true
 [pull]
-	ff = only
+    ff = only
 [diff]
     compactionHeuristic = true
-[remote "origin"]
+[fetch]
     prune = true
 [color]
     ui = auto
@@ -19,10 +19,10 @@
 [alias]
     dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)%an <%ae>%C(reset) %C(magenta)%cr%C(reset)%C(auto)%d%C(reset)%n%s' --date-order
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
 
 # Machine specific configuration
 [include]
