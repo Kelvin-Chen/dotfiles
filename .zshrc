@@ -4,11 +4,16 @@ source ~/.zplug/init.zsh
 #####################
 #      Plugins
 #####################
+
+# nvm plugin just kept here for installation only. Loaded in zshenv so its
+# available for non-interactive shells.
+# zplug "lukechilds/zsh-nvm"
+#
+
 zplug "lib/clipboard", from:oh-my-zsh
 zplug "lib/completion", from:oh-my-zsh
 zplug "lib/history", from:oh-my-zsh
 zplug "lib/key-bindings", from:oh-my-zsh
-zplug "lukechilds/zsh-nvm"
 zplug "plugins/brew-cask", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 zplug "plugins/docker", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh

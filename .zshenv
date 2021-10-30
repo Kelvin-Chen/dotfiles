@@ -14,7 +14,10 @@ export GIT_EDITOR=$EDITOR
 
 export PAGER=less
 
-export NVM_LAZY_LOAD=false
+export NVM_LAZY_LOAD=true
+export NVM_COMPLETION=true
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
 
 # Set Android paths if $ANDROID_HOME is set
 if [[ -n "$ANDROID_HOME" ]]; then
@@ -25,3 +28,4 @@ fi
 LOCAL_ZSHENV="$HOME/.zshenv_local"
 test -f "$LOCAL_ZSHENV" || touch "$LOCAL_ZSHENV"
 source "$LOCAL_ZSHENV"
+
