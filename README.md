@@ -1,30 +1,71 @@
-# Config
+# dotfiles
 
 ## Overview
 
-This is a repo to store dotfiles and other configuration. It is implemented
-as a git repository with the working tree rooted to the home directory.
+This is a git repo to store my dotfiles and other config files. It uses GNU Stow
+to symlink the dotfiles from this repo to the `$HOME` directory.
 
-The `config` command is aliased to git with the worktree set to `$HOME`.
+## Installation
 
-## Installing
+### Prerequisites
+
+The following prequisites are needed:
+
+- stow
+- make
+
+Make is not actually a hard prerequisite, it just helps provide the build
+targets to run `stow`.  Alternatively, just manually run the command listed in
+the Makefile.
+
+### Symlinking the dotfiles
 
 ```sh
-git clone --separate-git-dir="$HOME/.myconf" \
-    git@github.com:Kelvin-Chen/config.git \
-    "$HOME/myconf-tmp"
-
-cp ~/myconf-tmp/.gitmodules $HOME
-
-alias config='git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
-
-config config --local status.showUntrackedFiles no
-
-config reset --hard HEAD
-
-rm -rf ~/myconf-tmp/
-
-curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
-
-config submodule update --init --recursive
+make
 ```
+
+### Cleaning up the dotfiles
+
+```sh
+make delete
+```
+
+## Setting up zsh
+
+### Installing zplug and plugins
+
+zsh plugins are managed using [zplug](https://github.com/zplug/zplug).
+
+Install with the following command:
+
+```sh
+curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+```
+
+Then install all plugins defined in `.zshrc`:
+
+```sh
+zplug install
+```
+
+## Setting up terminal colors
+
+The zsh config automatically loads
+[base16-shell](https://github.com/chriskempson/base16-shell) to manage terminal
+colors.
+
+Install base16-color with the following command:
+
+```sh
+git clone https://github.com/chriskempson/base16-shell.git ~/.config/base16-shell
+```
+
+## Setting up tmux
+
+Using tmux requires installing the tpm plugin:
+
+```sh
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+
+Then in tmux use `<Ctrl-B> I` to install the tmux plugins.

@@ -28,4 +28,3 @@ fi
 LOCAL_ZSHENV="$HOME/.zshenv_local"
 test -f "$LOCAL_ZSHENV" || touch "$LOCAL_ZSHENV"
 source "$LOCAL_ZSHENV"
-
