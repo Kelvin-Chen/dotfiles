@@ -104,6 +104,7 @@ let g:airline#extensions#tmuxline#enabled = 0
 " Tmuxline settings
 let g:tmuxline_powerline_separators = 1
 let g:tmuxline_theme = 'vim_statusline_3'
+let g:tmuxline_preset = 'crosshair'
 
 " Fugitive mappings
 nmap <leader>gc :Gcommit<cr>
@@ -138,6 +139,9 @@ set hlsearch
 set colorcolumn=80
 
 " Colorscheme
+if has('nvim')
+    set termguicolors
+endif
 if filereadable(expand("~/.vimrc_background"))
     let base16colorspace=256
     source ~/.vimrc_background
