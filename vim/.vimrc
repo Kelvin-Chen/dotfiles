@@ -107,10 +107,10 @@ let g:tmuxline_theme = 'vim_statusline_3'
 let g:tmuxline_preset = 'crosshair'
 
 " Fugitive mappings
-nmap <leader>gc :Gcommit<cr>
-nmap <leader>gd :Gdiff<cr>
-nmap <leader>gs :Gstatus<cr>
-nmap <leader>gp :Gpush<cr>
+nmap <leader>gc :Git commit<cr>
+nmap <leader>gd :Git diff<cr>
+nmap <leader>gs :Git<cr>
+nmap <leader>gp :Git push<cr>
 
 " CtrlP mappings
 nmap <leader>f :CtrlP .<cr>
