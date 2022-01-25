@@ -24,6 +24,8 @@ if [[ -n "$ANDROID_HOME" ]]; then
     export PATH="$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin"
 fi
 
+export FZF_DEFAULT_OPTS='--height 60% --layout=reverse --border'
+
 # Source machine specific configuration
 LOCAL_ZSHENV="$HOME/.zshenv_local"
 test -f "$LOCAL_ZSHENV" || touch "$LOCAL_ZSHENV"
