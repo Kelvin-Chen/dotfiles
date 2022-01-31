@@ -128,9 +128,12 @@ nmap <leader>n :NERDTreeToggle<cr>
 nmap <leader>tb :TagbarToggle<cr>
 let g:tagbar_autofocus = 1
 
-" Easy-align mappings
+" easy-align mappings
 vmap <Enter> <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
+
+" easy-motion mappings
+nmap  <leader><leader>/ <Plug>(easymotion-sn)
 
 " Display settings
 syntax enable
