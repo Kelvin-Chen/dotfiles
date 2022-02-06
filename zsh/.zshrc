@@ -14,6 +14,7 @@ zplug "lib/clipboard", from:oh-my-zsh
 zplug "lib/completion", from:oh-my-zsh
 zplug "lib/history", from:oh-my-zsh
 zplug "lib/key-bindings", from:oh-my-zsh
+zplug "plugins/bazel", from:oh-my-zsh
 zplug "plugins/docker", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/gnu-utils", from:oh-my-zsh
