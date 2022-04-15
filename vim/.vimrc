@@ -29,7 +29,7 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
-Plug 'w0rp/ale'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " UI Plugins
 Plug 'chriskempson/base16-vim'
@@ -196,14 +196,3 @@ let g:sexp_mappings = {
 
 " Turn off delimitmate for clojure
 autocmd InsertEnter *.clj DelimitMateOff
-
-" vim-ale settings
-nnoremap <C-]> :ALEGoToDefinitionInTab<cr>
-nnoremap <S-k> :ALEHover<cr>
-let g:ale_completion_enabled = 1
-let g:ale_set_highlights = 0
-let g:ale_fixers = {
-            \ 'ruby': ['rubocop'],
-            \ 'typescript': ['tslint']
-            \ }
-set completeopt=menu,menuone,preview,noselect,noinsert
