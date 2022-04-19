@@ -176,14 +176,6 @@ let g:ctrlp_user_command = [
     \ 'cd %s && git ls-files -co --exclude-standard'
     \ ]
 
-" Bind C-Space to omnicomplete
-inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
-            \ "\<lt>C-n>" :
-            \ "\<lt>C-x>\<lt>C-o><c-r>=pumvisible() ?" .
-            \ "\"\\<lt>c-n>\\<lt>c-p>\\<lt>c-n>\" :" .
-            \ "\" \\<lt>bs>\\<lt>C-n>\"\<CR>"
-imap <C-@> <C-Space>
-
 let delimitMate_expand_cr = 1
 
 " Add space after comments delimeter.
@@ -196,3 +188,22 @@ let g:sexp_mappings = {
 
 " Turn off delimitmate for clojure
 autocmd InsertEnter *.clj DelimitMateOff
+
+" Use tab to trigger completion with characters ahead and navigate.
+inoremap <silent><expr> <TAB>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+    inoremap <silent><expr> <c-space> coc#refresh()
+else
+    inoremap <silent><expr> <c-@> coc#refresh()
+endif
