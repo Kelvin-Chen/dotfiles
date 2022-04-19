@@ -189,6 +189,8 @@ let g:sexp_mappings = {
 " Turn off delimitmate for clojure
 autocmd InsertEnter *.clj DelimitMateOff
 
+" BEGIN coc.nvim settings
+
 " Use tab to trigger completion with characters ahead and navigate.
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
@@ -207,3 +209,25 @@ if has('nvim')
 else
     inoremap <silent><expr> <c-@> coc#refresh()
 endif
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+    if CocAction('hasProvider', 'hover')
+        call CocActionAsync('doHover')
+    else
+        call feedkeys('K', 'in')
+    endif
+endfunction
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gt <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Symbol renaming.
+nmap <leader>r <Plug>(coc-rename)
+
+" END coc.nvim settings
