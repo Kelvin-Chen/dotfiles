@@ -48,18 +48,6 @@ Then install all plugins defined in `.zshrc`:
 zplug install
 ```
 
-## Setting up terminal colors
-
-The zsh config automatically loads
-[base16-shell](https://github.com/chriskempson/base16-shell) to manage terminal
-colors.
-
-Install base16-color with the following command:
-
-```sh
-git clone https://github.com/chriskempson/base16-shell.git ~/.config/base16-shell
-```
-
 ## Setting up tmux
 
 Using tmux requires installing the tpm plugin:

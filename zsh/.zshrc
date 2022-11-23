@@ -10,6 +10,7 @@ source ~/.zplug/init.zsh
 # zplug "lukechilds/zsh-nvm"
 #
 
+zplug 'chriskempson/base16-shell', from:github
 zplug "lib/clipboard", from:oh-my-zsh
 zplug "lib/completion", from:oh-my-zsh
 zplug "lib/history", from:oh-my-zsh
@@ -29,6 +30,8 @@ zplug 'dracula/zsh', as:theme
 
 zplug load
 
+base16_tomorrow-night
+
 # Operating system specific configuration.
 if [[ "$(uname)" == "Darwin" ]]; then
     source "$HOME/.zshrc_mac"
@@ -44,10 +47,3 @@ source "$HOME/.aliases"
 LOCAL_ZSHRC="$HOME/.zshrc_local"
 test -f "$LOCAL_ZSHRC" || touch "$LOCAL_ZSHRC"
 source "$LOCAL_ZSHRC"
-
-# Base16 Shell
-# https://github.com/chriskempson/base16-shell
-BASE16_SHELL="$HOME/.config/base16-shell/"
-[ -n "$PS1" ] && \
-    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-        eval "$("$BASE16_SHELL/profile_helper.sh")"
