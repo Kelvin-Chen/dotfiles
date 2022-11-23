@@ -31,7 +31,7 @@ zplug 'dracula/zsh', as:theme
 
 zplug load
 
-base16_tomorrow-night
+base16_gruvbox-dark-hard
 
 # Operating system specific configuration.
 if [[ "$(uname)" == "Darwin" ]]; then
