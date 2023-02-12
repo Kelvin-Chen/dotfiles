@@ -9,8 +9,6 @@ source ~/.zplug/init.zsh
 # available for non-interactive shells.
 # zplug "lukechilds/zsh-nvm"
 
-export DRACULA_ARROW_ICON="=> "
-
 zplug 'chriskempson/base16-shell', from:github
 zplug "lib/clipboard", from:oh-my-zsh
 zplug "lib/completion", from:oh-my-zsh
