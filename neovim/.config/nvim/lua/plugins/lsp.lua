@@ -15,7 +15,6 @@ return {
                 'lua_ls',
                 'pyright',
                 'ts_ls',
-                'gopls',
             },
         },
     },
@@ -52,7 +51,7 @@ return {
                 },
             })
 
-            vim.lsp.enable({ 'lua_ls', 'pyright', 'ts_ls', 'gopls' })
+            vim.lsp.enable({ 'lua_ls', 'pyright', 'ts_ls' })
         end,
     },
 
@@ -121,7 +120,6 @@ return {
         },
         opts = {
             formatters_by_ft = {
-                go = { 'goimports', 'gofmt' },
                 javascript = { 'prettierd', 'prettier', stop_after_first = true },
                 typescript = { 'prettierd', 'prettier', stop_after_first = true },
                 python = { 'ruff_format' },
