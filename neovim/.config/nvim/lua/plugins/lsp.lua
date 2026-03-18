@@ -43,17 +43,16 @@ return {
                 end,
             })
 
-            -- Server configs (mason-lspconfig auto-sets up installed servers,
-            -- but you can customize individual ones here)
-            local lspconfig = require('lspconfig')
-
-            lspconfig.lua_ls.setup({
+            -- Configure servers using nvim 0.11+ native vim.lsp.config
+            vim.lsp.config('lua_ls', {
                 settings = {
                     Lua = {
                         diagnostics = { globals = { 'vim' } },
                     },
                 },
             })
+
+            vim.lsp.enable({ 'lua_ls', 'pyright', 'ts_ls', 'gopls' })
         end,
     },
 
