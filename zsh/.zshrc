@@ -1,32 +1,38 @@
-# Load zplug
-source ~/.zplug/init.zsh
+# Bootstrap zinit
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+if [[ ! -d "$ZINIT_HOME" ]]; then
+  mkdir -p "$(dirname $ZINIT_HOME)"
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+source "${ZINIT_HOME}/zinit.zsh"
 
 #####################
 #      Plugins
 #####################
 
-# nvm plugin just kept here for installation only. Loaded in zshenv so its
-# available for non-interactive shells.
-# zplug "lukechilds/zsh-nvm"
+# Oh-my-zsh libs
+zinit snippet OMZL::clipboard.zsh
+zinit snippet OMZL::completion.zsh
+zinit snippet OMZL::history.zsh
+zinit snippet OMZL::key-bindings.zsh
 
-zplug "lib/clipboard", from:oh-my-zsh
-zplug "lib/completion", from:oh-my-zsh
-zplug "lib/history", from:oh-my-zsh
-zplug "lib/key-bindings", from:oh-my-zsh
-zplug "plugins/bazel", from:oh-my-zsh
-zplug "plugins/docker", from:oh-my-zsh
-zplug "plugins/git", from:oh-my-zsh
-zplug "plugins/gnu-utils", from:oh-my-zsh
-zplug "plugins/macos", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
-zplug "plugins/tmux", from:oh-my-zsh
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-zplug "zsh-users/zsh-autosuggestions", defer:2
-zplug "zsh-users/zsh-completions"
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
+# Oh-my-zsh plugins
+zinit snippet OMZP::git
+zinit snippet OMZP::gnu-utils
+zinit snippet OMZP::docker
+zinit snippet OMZP::bazel
 
-zplug 'dracula/zsh', as:theme
+# Theme
+zinit ice as"theme"
+zinit light dracula/zsh
 
-zplug load
+# Heavy plugins — loaded asynchronously after prompt appears (turbo mode)
+zinit wait lucid for \
+  zsh-users/zsh-completions \
+  atinit"zicompinit; zicdreplay" \
+    zdharma-continuum/fast-syntax-highlighting \
+  atload"_zsh_autosuggest_start" \
+    zsh-users/zsh-autosuggestions
 
 # Operating system specific configuration.
 if [[ "$(uname)" == "Darwin" ]]; then

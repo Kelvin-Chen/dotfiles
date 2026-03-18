@@ -31,18 +31,14 @@ make delete
 | `shell/`   | Shared shell aliases                        |
 | `tmux/`    | tmux config and statusline                  |
 | `vim/`     | Vim fallback config (vimscript)             |
-| `zsh/`     | Zsh config, plugins (zplug), prompt         |
+| `zsh/`     | Zsh config, plugins (zinit), prompt         |
 
 ## Post-install setup
 
 ### zsh plugins
 
-Plugins are managed with [zplug](https://github.com/zplug/zplug):
-
-```sh
-curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
-zplug install
-```
+Plugins are managed with [zinit](https://github.com/zdharma-continuum/zinit).
+On first launch, `.zshrc` will automatically clone zinit and install plugins.
 
 ### Neovim
 

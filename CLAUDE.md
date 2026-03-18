@@ -52,7 +52,7 @@ Lua config using lazy.nvim. Plugin specs are split by category in `lua/plugins/`
 ### Zsh (`zsh/`)
 
 - `.zshenv` — sets `$EDITOR`, `$LANG`, FZF defaults, lazy NVM loading
-- `.zshrc` — loads zplug plugins (oh-my-zsh modules, zsh-users/autosuggestions, syntax-highlighting), then sources `.zshrc_mac` or `.zshrc_linux`
+- `.zshrc` — bootstraps zinit (auto-clones on first run), loads oh-my-zsh snippets eagerly, then defers heavy plugins (autosuggestions, fast-syntax-highlighting, completions) via turbo/async mode
 - `shell/.aliases` — shared aliases (`vi`/`vim` → `$EDITOR`, `fzfc` fuzzy grep, etc.)
 
 ### Tmux (`tmux/.tmux.conf`)

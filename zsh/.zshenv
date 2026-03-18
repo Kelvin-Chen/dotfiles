@@ -8,10 +8,16 @@ export GIT_EDITOR=$EDITOR
 
 export PAGER=less
 
-export NVM_LAZY_LOAD=true
-export NVM_COMPLETION=true
+# NVM — lazy load on first use to avoid startup overhead
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+_nvm_load() {
+  [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+}
+nvm()  { unfunction nvm; _nvm_load; nvm "$@"; }
+node() { unfunction node npm npx; _nvm_load; node "$@"; }
+npm()  { unfunction node npm npx; _nvm_load; npm "$@"; }
+npx()  { unfunction node npm npx; _nvm_load; npx "$@"; }
 
 # Set Android paths if $ANDROID_HOME is set
 if [[ -n "$ANDROID_HOME" ]]; then
