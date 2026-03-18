@@ -1,59 +1,73 @@
 # dotfiles
 
-## Overview
+Config files managed with [GNU Stow](https://www.gnu.org/software/stow/),
+which symlinks everything from this repo into `$HOME`.
 
-This is a git repo to store my dotfiles and other config files. It uses GNU Stow
-to symlink the dotfiles from this repo to the `$HOME` directory.
-
-## Installation
-
-### Prerequisites
-
-The following prequisites are needed:
-
-- stow
-- make
-
-Make is not actually a hard prerequisite, it just helps provide the build
-targets to run `stow`.  Alternatively, just manually run the command listed in
-the Makefile.
-
-### Symlinking the dotfiles
+## Quick start
 
 ```sh
+# Install Homebrew packages
+brew bundle
+
+# Symlink all dotfiles
 make
 ```
 
-### Cleaning up the dotfiles
+To remove all symlinks:
 
 ```sh
 make delete
 ```
 
-## Setting up zsh
+## What's included
 
-### Installing zplug and plugins
+| Directory  | What it configures                          |
+|------------|---------------------------------------------|
+| `git/`     | Git config, aliases, LFS                    |
+| `intellij/`| IdeaVim settings                            |
+| `kitty/`   | Kitty terminal emulator                     |
+| `latex/`   | latexmk (XeLaTeX)                           |
+| `neovim/`  | Neovim (lua config with lazy.nvim)          |
+| `shell/`   | Shared shell aliases                        |
+| `tmux/`    | tmux config and statusline                  |
+| `vim/`     | Vim fallback config (vimscript)             |
+| `zsh/`     | Zsh config, plugins (zplug), prompt         |
 
-zsh plugins are managed using [zplug](https://github.com/zplug/zplug).
+## Post-install setup
 
-Install with the following command:
+### zsh plugins
+
+Plugins are managed with [zplug](https://github.com/zplug/zplug):
 
 ```sh
 curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
-```
-
-Then install all plugins defined in `.zshrc`:
-
-```sh
 zplug install
 ```
 
-## Setting up tmux
+### Neovim
 
-Using tmux requires installing the tpm plugin:
+On first launch, [lazy.nvim](https://github.com/folke/lazy.nvim) will
+auto-install all plugins. Run `:Mason` to manage LSP servers.
+
+### tmux
+
+Install the [tpm](https://github.com/tmux-plugins/tpm) plugin manager:
 
 ```sh
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
 
-Then in tmux use `<Ctrl-B> I` to install the tmux plugins.
+Then press `<Ctrl-B> I` inside tmux to install plugins.
+
+## Local overrides
+
+Machine-specific config can be added to these files (not tracked by git):
+
+| File              | Purpose                          |
+|-------------------|----------------------------------|
+| `~/.zshenv_local` | Environment variables, PATH      |
+| `~/.zshrc_local`  | Shell config, aliases            |
+| `~/.zshrc_mac`    | macOS-specific shell config      |
+| `~/.zshrc_linux`  | Linux-specific shell config      |
+| `~/.config/kitty/local.conf` | Kitty overrides       |
+| `~/.config/git/gitconfig`    | Git overrides (e.g. work email) |
