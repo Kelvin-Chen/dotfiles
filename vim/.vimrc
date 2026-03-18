@@ -1,8 +1,5 @@
 let &rtp = expand('~/.vim') . ',' . &rtp
 
-" Use system Python for Neovim
-let g:python3_host_prog = substitute(system('command -v python3 || command -v python'), '\n', '', '')
-
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -30,7 +27,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 
 " UI Plugins
-Plug 'chriskempson/base16-vim'
+Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -85,9 +82,6 @@ noremap j gj
 noremap k gk
 
 " Move between windows more easily
-if has('nvim')
-    nmap <BS> <C-h>
-endif
 nnoremap <C-j> <C-W>j
 nnoremap <C-k> <C-W>k
 nnoremap <C-h> <C-W>h
@@ -140,14 +134,10 @@ set hlsearch
 set colorcolumn=80
 
 " Colorscheme and true color settings
-if has('nvim')
+if has('termguicolors')
     set termguicolors
 endif
-if exists('$BASE16_THEME')
-        \ && (!exists('g:colors_name') || g:colors_name != 'base16-$BASE16_THEME')
-    let base16colorspace=256
-    colorscheme base16-$BASE16_THEME
-endif
+colorscheme catppuccin_mocha
 
 " Disable backup
 set noswapfile
