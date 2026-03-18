@@ -1,15 +1,8 @@
 export LANG=en_US.UTF-8
 
-export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
-# Set vi/vim/nvim as $EDITOR and $GIT_EDITOR
-export EDITOR=vi
-hash vim 2>/dev/null && {
-    export EDITOR=vim
-}
-hash nvim 2>/dev/null && {
-    export EDITOR=nvim
-}
+export EDITOR=nvim
 export GIT_EDITOR=$EDITOR
 
 export PAGER=less
