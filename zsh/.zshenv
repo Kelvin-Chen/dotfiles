@@ -1,4 +1,5 @@
 export LANG=en_US.UTF-8
+export COLORTERM=truecolor
 
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 

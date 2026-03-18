@@ -6,7 +6,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.hlsearch = true
 vim.opt.colorcolumn = '80'
-vim.opt.termguicolors = true
+vim.opt.termguicolors = vim.env.COLORTERM == 'truecolor' or vim.env.COLORTERM == '24bit'
 vim.opt.signcolumn = 'yes'
 vim.opt.cursorline = true
 
