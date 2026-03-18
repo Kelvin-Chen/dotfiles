@@ -1,13 +1,14 @@
 return {
     {
-        'ellisonleao/gruvbox.nvim',
+        'catppuccin/nvim',
+        name = 'catppuccin',
         lazy = false,
         priority = 1000,
         config = function()
-            require('gruvbox').setup({
-                contrast = 'hard',
+            require('catppuccin').setup({
+                flavour = 'mocha',
             })
-            vim.cmd.colorscheme('gruvbox')
+            vim.cmd.colorscheme('catppuccin')
         end,
     },
 
@@ -16,7 +17,7 @@ return {
         dependencies = { 'nvim-tree/nvim-web-devicons' },
         opts = {
             options = {
-                theme = 'gruvbox',
+                theme = 'catppuccin',
                 component_separators = { left = '', right = '' },
                 section_separators = { left = '', right = '' },
                 globalstatus = true,
