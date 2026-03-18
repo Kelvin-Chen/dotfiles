@@ -1,8 +1,7 @@
 let &rtp = expand('~/.vim') . ',' . &rtp
 
 " Use system Python for Neovim
-let g:python_host_prog = '/usr/local/bin/python2'
-let g:python3_host_prog = '/usr/local/bin/python3'
+let g:python3_host_prog = substitute(system('command -v python3 || command -v python'), '\n', '', '')
 
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs

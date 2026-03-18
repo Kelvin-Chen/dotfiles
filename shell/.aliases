@@ -9,7 +9,11 @@ echo_ip () {
 
 alias emacs="emacs -nw"
 
-alias ls='ls -lG'
+if ls --color=auto &>/dev/null 2>&1; then
+    alias ls='ls -l --color=auto'  # GNU ls (Linux)
+else
+    alias ls='ls -lG'              # BSD ls (macOS)
+fi
 
 alias fzfc='grep --line-buffered --color=never -r "" * | fzf'
 
