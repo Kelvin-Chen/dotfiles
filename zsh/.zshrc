@@ -9,7 +9,6 @@ source ~/.zplug/init.zsh
 # available for non-interactive shells.
 # zplug "lukechilds/zsh-nvm"
 
-zplug 'chriskempson/base16-shell', from:github
 zplug "lib/clipboard", from:oh-my-zsh
 zplug "lib/completion", from:oh-my-zsh
 zplug "lib/history", from:oh-my-zsh
@@ -28,8 +27,6 @@ zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug 'dracula/zsh', as:theme
 
 zplug load
-
-base16_gruvbox-dark-hard
 
 # Operating system specific configuration.
 if [[ "$(uname)" == "Darwin" ]]; then
