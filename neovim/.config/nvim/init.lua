@@ -30,6 +30,8 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.modeline = true
 vim.opt.laststatus = 3
+vim.opt.mouse = 'a'
+vim.opt.clipboard = 'unnamedplus'
 
 -- Keymaps
 vim.keymap.set('n', ';', ':')
