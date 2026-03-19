@@ -12,12 +12,16 @@ return {
                     layout_strategy = 'horizontal',
                     layout_config = { prompt_position = 'top' },
                     sorting_strategy = 'ascending',
+                    file_ignore_patterns = { '^%.git/' },
                 },
             })
             telescope.load_extension('fzf')
 
             local builtin = require('telescope.builtin')
-            vim.keymap.set('n', '<leader>f', builtin.find_files, { desc = 'Find files' })
+            vim.keymap.set('n', '<leader>f', function()
+                local git_root = vim.fn.systemlist('git rev-parse --show-toplevel 2>/dev/null')[1]
+                builtin.find_files({ cwd = git_root or vim.fn.getcwd(), hidden = true })
+            end, { desc = 'Find files' })
             vim.keymap.set('n', '<leader>b', builtin.buffers, { desc = 'Buffers' })
             vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = 'Live grep' })
             vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = 'Help tags' })
