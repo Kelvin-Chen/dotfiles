@@ -10,6 +10,7 @@ brew "jj"
 
 # Terminal
 brew "fzf"
+brew "ripgrep"
 brew "zellij"
 
 # Casks
