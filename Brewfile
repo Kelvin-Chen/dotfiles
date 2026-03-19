@@ -10,6 +10,7 @@ brew "jj"
 
 # Terminal
 brew "fzf"
+brew "fd"
 brew "ripgrep"
 brew "zellij"
 
