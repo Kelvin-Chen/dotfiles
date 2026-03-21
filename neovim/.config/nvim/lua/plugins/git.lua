@@ -22,7 +22,7 @@ return {
         cmd = 'Git',
         keys = {
             { '<leader>gc', '<cmd>Git commit<cr>', desc = 'Git commit' },
-            { '<leader>gd', '<cmd>Git diff<cr>', desc = 'Git diff' },
+            { '<leader>gd', '<cmd>Gvdiffsplit<cr>', desc = 'Git diff' },
             { '<leader>gs', '<cmd>Git<cr>', desc = 'Git status' },
             { '<leader>gp', '<cmd>Git push<cr>', desc = 'Git push' },
         },
