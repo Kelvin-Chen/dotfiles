@@ -20,10 +20,18 @@ return {
     {
         'tpope/vim-fugitive',
         cmd = 'Git',
+        init = function()
+            vim.api.nvim_create_autocmd('FileType', {
+                pattern = 'fugitive',
+                callback = function(ev)
+                    vim.keymap.set('n', '<cr>', 'dv', { buffer = ev.buf, remap = true, desc = 'Diff file (vertical)' })
+                end,
+            })
+        end,
         keys = {
             { '<leader>gc', '<cmd>Git commit<cr>', desc = 'Git commit' },
             { '<leader>gd', '<cmd>Gvdiffsplit<cr>', desc = 'Git diff' },
-            { '<leader>gs', '<cmd>Git<cr>', desc = 'Git status' },
+            { '<leader>gs', function() vim.cmd('topleft vertical Git') vim.cmd('vertical resize 40') end, desc = 'Git status' },
             { '<leader>gp', '<cmd>Git push<cr>', desc = 'Git push' },
         },
     },
