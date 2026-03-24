@@ -1,0 +1,8 @@
+^/docs
+^/scripts
+^/\.stow-local-ignore
+^/install\.sh
+^/Makefile
+^/Brewfile
+^/README\.md
+^/CLAUDE\.md

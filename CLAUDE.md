@@ -14,6 +14,15 @@ make                 # Symlink all dotfiles to $HOME (stow --restow */)
 make delete          # Remove all symlinks
 ```
 
+```sh
+# Bootstrap a new machine (run from anywhere, no repo required)
+curl -fsSL https://raw.githubusercontent.com/Kelvin-Chen/dotfiles/master/install.sh \
+  -o /tmp/dotfiles-install.sh && bash /tmp/dotfiles-install.sh
+
+# Or if repo is already cloned:
+make setup
+```
+
 Post-install (one-time):
 ```sh
 # Zsh plugins
@@ -61,3 +70,17 @@ Lua config using lazy.nvim. Plugin specs are split by category in `lua/plugins/`
 ### Tmux (`tmux/.tmux.conf`)
 
 Plugins via tpm: vim-tmux-navigator, tmux-sensible, tmux-yank. Vi-style copy with OSC 52 clipboard (works over SSH). Statusline uses terminal color indices (color-scheme agnostic).
+
+### Bootstrap scripts (`scripts/`)
+
+- `install.sh` — curl target at repo root; checks for git, clones repo via HTTPS, execs bootstrap
+- `scripts/bootstrap.sh` — orchestrator; interactive phase (git identity, SSH key), then unattended
+- `scripts/macos.sh` — Homebrew install if missing + `brew bundle`
+- `scripts/linux.sh` — apt/pacman detection, best-effort package install
+- `scripts/common.sh` — stow conflict backup, `make` (stow), tpm clone
+
+All scripts use `#!/usr/bin/env bash` and are idempotent.
+`.stow-local-ignore` is committed to prevent `docs/`, `scripts/`, etc. from being stowed into `$HOME`.
+The `Makefile` uses an explicit `PACKAGES` list instead of `*/` glob to avoid stowing non-dotfile dirs.
+`chsh` to set zsh as default shell is handled by `bootstrap.sh` (Linux only).
+Git identity is written to `~/.config/git/gitconfig` (included by `git/.gitconfig` via `[include]`, never committed).
