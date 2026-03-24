@@ -12,6 +12,7 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 # Oh-my-zsh libs
 zinit snippet OMZL::clipboard.zsh
+fpath=(~/.zsh/completions $fpath)
 zinit snippet OMZL::completion.zsh
 zinit snippet OMZL::history.zsh
 zinit snippet OMZL::key-bindings.zsh

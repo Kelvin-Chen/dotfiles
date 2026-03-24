@@ -31,6 +31,8 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 Each directory (e.g. `git/`, `zsh/`, `neovim/`) mirrors the home directory structure. `git/.gitconfig` → `~/.gitconfig`, `neovim/.config/nvim/init.lua` → `~/.config/nvim/init.lua`, etc.
 
+**Important:** Stow sometimes links entire directories rather than individual files (e.g. `~/.zsh → dotfiles/zsh/.zsh`). When this happens, files under `~/.zsh/` are the actual dotfiles — not copies. Deleting or overwriting via the `~/` path modifies the repo directly. Always check `ls -la` before removing anything under a stow-managed path.
+
 ### Machine-specific overrides (not tracked)
 
 These files are sourced if present but never committed:
@@ -54,6 +56,7 @@ Lua config using lazy.nvim. Plugin specs are split by category in `lua/plugins/`
 - `.zshenv` — sets `$EDITOR`, `$LANG`, FZF defaults, lazy NVM loading
 - `.zshrc` — bootstraps zinit (auto-clones on first run), loads oh-my-zsh snippets eagerly, then defers heavy plugins (autosuggestions, fast-syntax-highlighting, completions) via turbo/async mode
 - `shell/.aliases` — shared aliases (`vi`/`vim` → `$EDITOR`, `fzfc` fuzzy grep, etc.)
+- `.zsh/completions/` — custom zsh completion scripts (e.g. `_claude`). Stowed as a directory symlink. `fpath=(~/.zsh/completions $fpath)` is set in `.zshrc` before `OMZL::completion.zsh` (which calls compinit eagerly).
 
 ### Tmux (`tmux/.tmux.conf`)
 

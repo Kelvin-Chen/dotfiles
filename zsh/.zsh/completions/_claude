@@ -1,0 +1,171 @@
+#compdef claude
+
+# Claude Code CLI — cache-backed zsh completion.
+# Flags and subcommands are parsed from --help on first tab after a version change.
+# Stable enum values (--effort, --model, etc.) are hardcoded.
+
+_CLAUDE_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/claude_completion"
+typeset -g _claude_cached_version
+
+# Parse --help output into TSV lines: flag<TAB>argspec<TAB>description
+# Reads from stdin. Handles both "--long" and "-X, --long" patterns.
+_claude_parse_flags() {
+  awk '
+    function parse(line,    flag, argspec, rest) {
+      if (!match(line, /^--[a-zA-Z-]+/)) return
+      flag = substr(line, RSTART, RLENGTH)
+      rest = substr(line, RSTART + RLENGTH)
+      sub(/^, --[a-zA-Z-]+[^ ]*/, "", rest)
+      argspec = ""
+      if (match(rest, /^ (<[^>]+>|\[[^\]]+\])/)) {
+        argspec = substr(rest, RSTART + 1, RLENGTH - 1)
+        rest = substr(rest, RSTART + RLENGTH)
+      }
+      sub(/^[[:space:]]+/, "", rest)
+      gsub(/[\[\]]/, "", rest)
+      if (length(rest) > 70) rest = substr(rest, 1, 67) "..."
+      print flag "\t" argspec "\t" rest
+    }
+    /^  -[a-zA-Z], --/ { line = substr($0, 3); sub(/^-[a-zA-Z], /, "", line); parse(line) }
+    /^  --[a-zA-Z]/    { parse(substr($0, 3)) }
+  '
+}
+
+_claude_build_cache() {
+  local cache_dir="$_CLAUDE_CACHE_DIR"
+  mkdir -p "$cache_dir"
+
+  local help tmp
+  help=$(claude --help 2>&1)
+
+  # Top-level flags (TSV: flag\targspec\tdesc)
+  tmp=$(mktemp "$cache_dir/.flags.XXXXXX")
+  printf '%s\n' "$help" | _claude_parse_flags > "$tmp"
+  mv "$tmp" "$cache_dir/flags"
+
+  # Subcommands (TSV: name\tdesc)
+  tmp=$(mktemp "$cache_dir/.subcommands.XXXXXX")
+  printf '%s\n' "$help" | awk '
+    /^Commands:/ { in_cmds = 1; next }
+    in_cmds && /^  [a-z]/ {
+      line = substr($0, 3)
+      if (!match(line, /^[-a-zA-Z|]+/)) next
+      name = substr(line, RSTART, RLENGTH)
+      sub(/\|.*/, "", name)
+      rest = substr(line, RSTART + RLENGTH)
+      # Strip bracketed fragments like [options], [options] [target]
+      gsub(/\[[^\]]*\][[:space:]]*/, "", rest)
+      sub(/^[[:space:]]+/, "", rest)
+      print name "\t" rest
+    }
+    in_cmds && /^$/ { in_cmds = 0 }
+  ' > "$tmp"
+  mv "$tmp" "$cache_dir/subcommands"
+
+  # Per-subcommand flags
+  local name desc sub_tmp
+  while IFS=$'\t' read -r name desc; do
+    [[ -z "$name" ]] && continue
+    sub_tmp=$(mktemp "$cache_dir/.subcmd_${name}.XXXXXX")
+    claude "$name" --help 2>&1 | _claude_parse_flags > "$sub_tmp"
+    mv "$sub_tmp" "$cache_dir/subcmd_${name}"
+  done < "$cache_dir/subcommands"
+
+  # Write version last — signals the cache is fully built
+  printf '%s\n' "$_claude_cached_version" > "$cache_dir/version"
+}
+
+_claude_ensure_cache() {
+  # Run claude --version once per shell session (Node startup ~100ms, not per tab-press)
+  if [[ -z "$_claude_cached_version" ]]; then
+    _claude_cached_version=$(claude --version 2>/dev/null)
+  fi
+
+  local cached_ver=''
+  [[ -f "$_CLAUDE_CACHE_DIR/version" ]] && cached_ver=$(<"$_CLAUDE_CACHE_DIR/version")
+
+  if [[ "$cached_ver" != "$_claude_cached_version" ]] || \
+     [[ ! -f "$_CLAUDE_CACHE_DIR/flags" ]] || \
+     [[ ! -f "$_CLAUDE_CACHE_DIR/subcommands" ]]; then
+    _claude_build_cache
+  fi
+}
+
+# Complete flags for a given subcommand using its cache file
+_claude_subcommand() {
+  local cache_file="$_CLAUDE_CACHE_DIR/subcmd_${1}"
+  [[ -f "$cache_file" ]] || return 1
+
+  local -a args
+  local flag argspec desc
+  while IFS=$'\t' read -r flag argspec desc; do
+    [[ -z "$flag" ]] && continue
+    if [[ -n "$argspec" ]]; then
+      args+=("${flag}[${desc}]:${argspec}:")
+    else
+      args+=("${flag}[${desc}]")
+    fi
+  done < "$cache_file"
+
+  (( ${#args} )) && _arguments -s "${args[@]}"
+}
+
+# Completion action for positional argument 1: offers subcommand names
+_claude_complete_pos1() {
+  local -a subcmds
+  if [[ -f "$_CLAUDE_CACHE_DIR/subcommands" ]]; then
+    local name desc
+    while IFS=$'\t' read -r name desc; do
+      [[ -n "$name" ]] && subcmds+=("${name}:${desc}")
+    done < "$_CLAUDE_CACHE_DIR/subcommands"
+  fi
+  (( ${#subcmds} )) && _describe 'subcommand' subcmds
+}
+
+_claude() {
+  (( $+commands[claude] )) || return 1
+
+  _claude_ensure_cache
+
+  local cache_dir="$_CLAUDE_CACHE_DIR"
+
+  # If the second word is a known subcommand and we're past it, complete its flags
+  if (( CURRENT > 2 )) && [[ -f "$cache_dir/subcmd_${words[2]}" ]]; then
+    _claude_subcommand "${words[2]}"
+    return
+  fi
+
+  # Flags whose values we know statically
+  local -A _skip=(
+    --effort 1 --permission-mode 1
+    --output-format 1 --input-format 1 --model 1
+  )
+
+  local -a args
+  args+=(
+    '--effort[Effort level for the current session]:level:(low medium high max)'
+    '--permission-mode[Permission mode for the session]:mode:(acceptEdits bypassPermissions default dontAsk plan auto)'
+    '--output-format[Output format (only with --print)]:format:(text json stream-json)'
+    '--input-format[Input format (only with --print)]:format:(text stream-json)'
+    '--model[Model for the session]:model:(sonnet opus haiku claude-sonnet-4-6 claude-opus-4-6 claude-haiku-4-5-20251001)'
+  )
+
+  # All other flags from cache
+  if [[ -f "$cache_dir/flags" ]]; then
+    local flag argspec desc
+    while IFS=$'\t' read -r flag argspec desc; do
+      [[ -z "$flag" || -n "${_skip[$flag]}" ]] && continue
+      if [[ -n "$argspec" ]]; then
+        args+=("${flag}[${desc}]:${argspec}:")
+      else
+        args+=("${flag}[${desc}]")
+      fi
+    done < "$cache_dir/flags"
+  fi
+
+  _arguments -s \
+    '1::subcommand or prompt:_claude_complete_pos1' \
+    "${args[@]}"
+}
+
+_claude "$@"
