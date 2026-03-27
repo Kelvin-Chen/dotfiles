@@ -27,6 +27,13 @@ return {
     },
 
     {
+        'MeanderingProgrammer/render-markdown.nvim',
+        ft = 'markdown',
+        dependencies = { 'nvim-treesitter/nvim-treesitter' },
+        opts = {},
+    },
+
+    {
         'folke/flash.nvim',
         event = 'VeryLazy',
         keys = {
