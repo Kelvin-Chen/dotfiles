@@ -62,6 +62,18 @@ _claude_build_cache() {
   ' > "$tmp"
   mv "$tmp" "$cache_dir/subcommands"
 
+  # Append known hidden subcommands not listed in --help
+  local -a _hidden_cmds=(
+    $'remote-control\tConnect local environment to claude.ai/code'
+  )
+  local _hc
+  for _hc in "${_hidden_cmds[@]}"; do
+    local _hname="${_hc%%$'\t'*}"
+    if ! grep -q "^${_hname}"$'\t' "$cache_dir/subcommands" 2>/dev/null; then
+      printf '%s\n' "$_hc" >> "$cache_dir/subcommands"
+    fi
+  done
+
   # Per-subcommand flags
   local name desc sub_tmp
   while IFS=$'\t' read -r name desc; do
