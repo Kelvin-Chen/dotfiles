@@ -5,13 +5,30 @@
 # Stable enum values (--effort, --model, etc.) are hardcoded.
 
 _CLAUDE_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/claude_completion"
+_CLAUDE_CACHE_SCHEMA=2
 typeset -g _claude_cached_version
 
 # Parse --help output into TSV lines: flag<TAB>argspec<TAB>description
 # Reads from stdin. Handles both "--long" and "-X, --long" patterns.
 _claude_parse_flags() {
   awk '
-    function parse(line,    flag, argspec, rest) {
+    function emit(flag, argspec, rest) {
+      sub(/^[[:space:]]+/, "", rest)
+      gsub(/[\[\]]/, "", rest)
+      if (length(rest) > 70) rest = substr(rest, 1, 67) "..."
+      print flag "\t" argspec "\t" rest
+    }
+    function parse(line,    flag, argspec, rest, positive_flag) {
+      if (match(line, /^--\[no-\][a-zA-Z-]+/)) {
+        flag = substr(line, RSTART, RLENGTH)
+        rest = substr(line, RSTART + RLENGTH)
+        positive_flag = flag
+        sub(/^--\[no-\]/, "--", positive_flag)
+        emit(positive_flag, "", rest)
+        sub(/^--/, "--no-", positive_flag)
+        emit(positive_flag, "", rest)
+        return
+      }
       if (!match(line, /^--[a-zA-Z-]+/)) return
       flag = substr(line, RSTART, RLENGTH)
       rest = substr(line, RSTART + RLENGTH)
@@ -21,13 +38,11 @@ _claude_parse_flags() {
         argspec = substr(rest, RSTART + 1, RLENGTH - 1)
         rest = substr(rest, RSTART + RLENGTH)
       }
-      sub(/^[[:space:]]+/, "", rest)
-      gsub(/[\[\]]/, "", rest)
-      if (length(rest) > 70) rest = substr(rest, 1, 67) "..."
-      print flag "\t" argspec "\t" rest
+      emit(flag, argspec, rest)
     }
     /^  -[a-zA-Z], --/ { line = substr($0, 3); sub(/^-[a-zA-Z], /, "", line); parse(line) }
     /^  --[a-zA-Z]/    { parse(substr($0, 3)) }
+    /^  --\[no-\]/     { parse(substr($0, 3)) }
   '
 }
 
@@ -83,6 +98,7 @@ _claude_build_cache() {
     mv "$sub_tmp" "$cache_dir/subcmd_${name}"
   done < "$cache_dir/subcommands"
 
+  printf '%s\n' "$_CLAUDE_CACHE_SCHEMA" > "$cache_dir/schema"
   # Write version last — signals the cache is fully built
   printf '%s\n' "$_claude_cached_version" > "$cache_dir/version"
 }
@@ -94,13 +110,81 @@ _claude_ensure_cache() {
   fi
 
   local cached_ver=''
+  local cached_schema=''
   [[ -f "$_CLAUDE_CACHE_DIR/version" ]] && cached_ver=$(<"$_CLAUDE_CACHE_DIR/version")
+  [[ -f "$_CLAUDE_CACHE_DIR/schema" ]] && cached_schema=$(<"$_CLAUDE_CACHE_DIR/schema")
 
   if [[ "$cached_ver" != "$_claude_cached_version" ]] || \
+     [[ "$cached_schema" != "$_CLAUDE_CACHE_SCHEMA" ]] || \
      [[ ! -f "$_CLAUDE_CACHE_DIR/flags" ]] || \
      [[ ! -f "$_CLAUDE_CACHE_DIR/subcommands" ]]; then
     _claude_build_cache
   fi
+}
+
+_claude_known_flag_spec() {
+  local flag="$1"
+  local desc="$2"
+
+  case "$flag" in
+    --effort)
+      printf '%s\n' "--effort[${desc:-Effort level for the current session}]:level:(low medium high xhigh max)"
+      ;;
+    --permission-mode)
+      printf '%s\n' "--permission-mode[${desc:-Permission mode for the session}]:mode:(acceptEdits auto bypassPermissions default dontAsk plan)"
+      ;;
+    --output-format)
+      printf '%s\n' "--output-format[${desc:-Output format (only with --print)}]:format:(text json stream-json)"
+      ;;
+    --input-format)
+      printf '%s\n' "--input-format[${desc:-Input format (only with --print)}]:format:(text stream-json)"
+      ;;
+    --model)
+      printf '%s\n' "--model[${desc:-Model for the session}]:model:(sonnet opus haiku claude-sonnet-4-6 claude-opus-4-6 claude-haiku-4-5-20251001)"
+      ;;
+    --spawn)
+      printf '%s\n' "--spawn[${desc:-Spawn mode}]:mode:(same-dir worktree session)"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+_claude_add_flag_spec() {
+  local flag="$1"
+  local argspec="$2"
+  local desc="$3"
+  local spec
+
+  if spec=$(_claude_known_flag_spec "$flag" "$desc"); then
+    args+=("$spec")
+  elif [[ -n "$argspec" ]]; then
+    args+=("${flag}[${desc}]:${argspec}:")
+  else
+    args+=("${flag}[${desc}]")
+  fi
+}
+
+_claude_describe_flags() {
+  local cache_file="$1"
+  [[ -f "$cache_file" ]] || return 1
+
+  local -a flags
+  local line rest flag argspec desc
+  while IFS= read -r line; do
+    rest="${line#*$'\t'}"
+    [[ "$rest" == "$line" ]] && continue
+    flag="${line%%$'\t'*}"
+    argspec="${rest%%$'\t'*}"
+    desc="${rest#*$'\t'}"
+    [[ -z "$flag" ]] && continue
+    desc="${desc//:/ -}"
+    [[ -z "$desc" && -n "$argspec" ]] && desc="Requires ${argspec}"
+    flags+=("${flag}:${desc}")
+  done < "$cache_file"
+
+  (( ${#flags} )) && _describe -O 'option' flags
 }
 
 # Complete flags for a given subcommand using its cache file
@@ -109,17 +193,20 @@ _claude_subcommand() {
   [[ -f "$cache_file" ]] || return 1
 
   local -a args
-  local flag argspec desc
-  while IFS=$'\t' read -r flag argspec desc; do
+  local line rest flag argspec desc
+  while IFS= read -r line; do
+    rest="${line#*$'\t'}"
+    [[ "$rest" == "$line" ]] && continue
+    flag="${line%%$'\t'*}"
+    argspec="${rest%%$'\t'*}"
+    desc="${rest#*$'\t'}"
     [[ -z "$flag" ]] && continue
-    if [[ -n "$argspec" ]]; then
-      args+=("${flag}[${desc}]:${argspec}:")
-    else
-      args+=("${flag}[${desc}]")
-    fi
+    _claude_add_flag_spec "$flag" "$argspec" "$desc"
   done < "$cache_file"
 
-  (( ${#args} )) && _arguments -s "${args[@]}"
+  (( ${#args} )) || return 1
+  _arguments -s "${args[@]}" && return
+  [[ -z "$PREFIX$SUFFIX" ]] && _claude_describe_flags "$cache_file"
 }
 
 # Completion action for positional argument 1: offers subcommand names
@@ -143,35 +230,27 @@ _claude() {
 
   # If the second word is a known subcommand and we're past it, complete its flags
   if (( CURRENT > 2 )) && [[ -f "$cache_dir/subcmd_${words[2]}" ]]; then
-    _claude_subcommand "${words[2]}"
+    local subcmd="${words[2]}"
+    curcontext="${curcontext%:*}:claude-${subcmd}:"
+    words=("${words[@]:1}")
+    (( CURRENT-- ))
+    _claude_subcommand "$subcmd"
     return
   fi
 
-  # Flags whose values we know statically
-  local -A _skip=(
-    --effort 1 --permission-mode 1
-    --output-format 1 --input-format 1 --model 1
-  )
-
   local -a args
-  args+=(
-    '--effort[Effort level for the current session]:level:(low medium high max)'
-    '--permission-mode[Permission mode for the session]:mode:(acceptEdits bypassPermissions default dontAsk plan auto)'
-    '--output-format[Output format (only with --print)]:format:(text json stream-json)'
-    '--input-format[Input format (only with --print)]:format:(text stream-json)'
-    '--model[Model for the session]:model:(sonnet opus haiku claude-sonnet-4-6 claude-opus-4-6 claude-haiku-4-5-20251001)'
-  )
 
-  # All other flags from cache
+  # Flags from cache, with known enum-style values layered in where useful
   if [[ -f "$cache_dir/flags" ]]; then
-    local flag argspec desc
-    while IFS=$'\t' read -r flag argspec desc; do
-      [[ -z "$flag" || -n "${_skip[$flag]}" ]] && continue
-      if [[ -n "$argspec" ]]; then
-        args+=("${flag}[${desc}]:${argspec}:")
-      else
-        args+=("${flag}[${desc}]")
-      fi
+    local line rest flag argspec desc
+    while IFS= read -r line; do
+      rest="${line#*$'\t'}"
+      [[ "$rest" == "$line" ]] && continue
+      flag="${line%%$'\t'*}"
+      argspec="${rest%%$'\t'*}"
+      desc="${rest#*$'\t'}"
+      [[ -z "$flag" ]] && continue
+      _claude_add_flag_spec "$flag" "$argspec" "$desc"
     done < "$cache_dir/flags"
   fi
 
