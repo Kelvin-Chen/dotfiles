@@ -27,6 +27,15 @@ make delete
 
 If the repo is already cloned, you can also run `make setup` directly.
 
+Before changing symlinks, you can run the lightweight checks:
+
+```sh
+make check
+```
+
+This runs Bash syntax checks, ShellCheck when installed, and a GNU Stow dry-run
+against the explicit package list in the Makefile.
+
 ## What's included
 
 | Directory  | What it configures                          |
@@ -65,7 +74,9 @@ Machine-specific config can be added to these files (not tracked by git):
 |-------------------|----------------------------------|
 | `~/.zshenv_local` | Environment variables, PATH      |
 | `~/.zshrc_local`  | Shell config, aliases            |
-| `~/.zshrc_mac`    | macOS-specific shell config      |
-| `~/.zshrc_linux`  | Linux-specific shell config      |
 | `~/.config/kitty/local.conf` | Kitty overrides       |
 | `~/.config/git/gitconfig`    | Git overrides (e.g. work email) |
+
+The tracked `~/.zshrc_mac` and `~/.zshrc_linux` files are sourced
+automatically on their matching platforms. Use `~/.zshrc_local` for
+machine-specific shell customizations that should not be committed.

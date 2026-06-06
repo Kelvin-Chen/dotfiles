@@ -4,17 +4,36 @@ alias vi="$EDITOR"
 alias vim="$EDITOR"
 
 echo_ip () {
-    dig TXT +short o-o.myaddr.l.google.com @ns.google.com | sed "s/\"//g"
+    if command -v dig &>/dev/null; then
+        dig TXT +short o-o.myaddr.l.google.com @ns.google.com | sed "s/\"//g"
+    elif command -v curl &>/dev/null; then
+        curl -fsSL https://api.ipify.org
+        echo
+    else
+        echo "echo_ip requires dig or curl" >&2
+        return 127
+    fi
 }
 
 alias emacs="emacs -nw"
 
-if ls --color=auto &>/dev/null 2>&1; then
+if ls --version &>/dev/null 2>&1; then
     alias ls='ls -ogh --color=auto'  # GNU ls (Linux)
 else
     alias ls='ls -oghG'              # BSD ls (macOS)
 fi
 
-alias fzfc='grep --line-buffered --color=never -r "" * | fzf'
+fzfc () {
+    if ! command -v fzf &>/dev/null; then
+        echo "fzfc requires fzf" >&2
+        return 127
+    fi
+
+    if command -v rg &>/dev/null; then
+        rg --line-number --hidden --glob '!.git' --color=never "${1:-}" | fzf
+    else
+        grep --line-number --recursive --binary-files=without-match --color=never "${1:-}" . | fzf
+    fi
+}
 
 alias less='less --tabs=4 -RFX'

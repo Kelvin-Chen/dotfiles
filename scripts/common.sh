@@ -6,12 +6,19 @@ BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d_%H%M%S)"
 
 echo "==> Running stow..."
 
-# Must cd into dotfiles dir so stow's glob expands against the right directory
+# Must cd into dotfiles dir so stow resolves package paths correctly.
 cd "$DOTFILES_DIR"
+
+PACKAGE_LINE="$(awk -F= '/^PACKAGES[[:space:]]*=/{print $2}' Makefile)"
+read -r -a PACKAGES <<< "$PACKAGE_LINE"
+if [[ "${#PACKAGES[@]}" -eq 0 ]]; then
+  echo "ERROR: Could not read PACKAGES from Makefile."
+  exit 1
+fi
 
 # Detect stow conflicts (files that exist at symlink targets but are not symlinks)
 # Run stow in simulate mode to capture conflict output
-CONFLICTS=$(stow --simulate --target="$HOME" --restow */ 2>&1 | grep "existing target is neither a link nor a directory" || true)
+CONFLICTS=$(stow --simulate --target="$HOME" --restow "${PACKAGES[@]}" 2>&1 | grep "existing target is neither a link nor a directory" || true)
 
 if [[ -n "$CONFLICTS" ]]; then
   echo "==> Backing up conflicting files to $BACKUP_DIR ..."

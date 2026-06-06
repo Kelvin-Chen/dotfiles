@@ -1,32 +1,42 @@
-export LANG=en_US.UTF-8
-export COLORTERM=truecolor
+export LANG="${LANG:-en_US.UTF-8}"
+export COLORTERM="${COLORTERM:-truecolor}"
 
-export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 
-export EDITOR=nvim
-export GIT_EDITOR=$EDITOR
+typeset -U path PATH
+path=(
+    "$HOME/.local/bin"
+    "$HOME/bin"
+    "$HOME/.cargo/bin"
+    /opt/homebrew/bin
+    /usr/local/bin
+    /usr/bin
+    /bin
+    /usr/sbin
+    /sbin
+    $path
+)
+export PATH
 
-export PAGER=less
+export EDITOR="${EDITOR:-nvim}"
+export GIT_EDITOR="${GIT_EDITOR:-$EDITOR}"
 
-# NVM — lazy load on first use to avoid startup overhead
-export NVM_DIR="$HOME/.nvm"
-_nvm_load() {
-  [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-  [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
-}
-nvm()  { unfunction nvm; _nvm_load; nvm "$@"; }
-node() { unfunction node npm npx; _nvm_load; node "$@"; }
-npm()  { unfunction node npm npx; _nvm_load; npm "$@"; }
-npx()  { unfunction node npm npx; _nvm_load; npx "$@"; }
+export PAGER="${PAGER:-less}"
+
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 
 # Set Android paths if $ANDROID_HOME is set
-if [[ -n "$ANDROID_HOME" ]]; then
-    export PATH="$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin"
+if [[ -n "${ANDROID_HOME:-}" ]]; then
+    path+=("$ANDROID_HOME/platform-tools" "$ANDROID_HOME/tools" "$ANDROID_HOME/tools/bin")
+    export PATH
 fi
 
-export FZF_DEFAULT_OPTS='--height 60% --layout=reverse --border'
+: "${FZF_DEFAULT_OPTS:=--height 60% --layout=reverse --border}"
+export FZF_DEFAULT_OPTS
 
 # Source machine specific configuration
 LOCAL_ZSHENV="$HOME/.zshenv_local"
-test -f "$LOCAL_ZSHENV" || touch "$LOCAL_ZSHENV"
-source "$LOCAL_ZSHENV"
+[[ -r "$LOCAL_ZSHENV" ]] && source "$LOCAL_ZSHENV"

@@ -10,7 +10,8 @@ Personal dotfiles managed with **GNU Stow**. Each top-level directory is a stow 
 
 ```sh
 brew bundle          # Install packages from Brewfile
-make                 # Symlink all dotfiles to $HOME (stow --restow */)
+make                 # Symlink all explicit dotfile packages to $HOME
+make check           # Bash syntax, optional ShellCheck, and Stow dry-run
 make delete          # Remove all symlinks
 ```
 
@@ -25,8 +26,7 @@ make setup
 
 Post-install (one-time):
 ```sh
-# Zsh plugins
-curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+# Zsh plugins — zinit auto-bootstraps on first zsh launch
 
 # Tmux plugins — then press <Ctrl-B> I inside tmux to install
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -62,10 +62,10 @@ Lua config using lazy.nvim. Plugin specs are split by category in `lua/plugins/`
 
 ### Zsh (`zsh/`)
 
-- `.zshenv` — sets `$EDITOR`, `$LANG`, FZF defaults, lazy NVM loading
-- `.zshrc` — bootstraps zinit (auto-clones on first run), loads oh-my-zsh snippets eagerly, then defers heavy plugins (autosuggestions, fast-syntax-highlighting, completions) via turbo/async mode
+- `.zshenv` — minimal environment setup: XDG base directories, PATH, `$EDITOR`, `$LANG`, `$PAGER`, NVM/FZF defaults, and optional `~/.zshenv_local`
+- `.zshrc` — bootstraps zinit when git is available, loads oh-my-zsh snippets eagerly, defers heavy plugins (autosuggestions, fast-syntax-highlighting, completions) via turbo/async mode, and lazy-loads NVM only when installed
 - `shell/.aliases` — shared aliases (`vi`/`vim` → `$EDITOR`, `fzfc` fuzzy grep, etc.)
-- `.zsh/completions/` — custom zsh completion scripts (e.g. `_claude`). Stowed as a directory symlink. `fpath=(~/.zsh/completions $fpath)` is set in `.zshrc` before `OMZL::completion.zsh` (which calls compinit eagerly).
+- `.zsh/completions/` — custom zsh completion scripts (e.g. `_claude`). Stowed as a directory symlink. `.zshrc` prepends `$HOME/.zsh/completions` to `fpath` before `OMZL::completion.zsh` (which calls compinit eagerly).
 
 ### Tmux (`tmux/.tmux.conf`)
 
@@ -82,5 +82,6 @@ Plugins via tpm: vim-tmux-navigator, tmux-sensible, tmux-yank. Vi-style copy wit
 All scripts use `#!/usr/bin/env bash` and are idempotent.
 `.stow-local-ignore` is committed to prevent `docs/`, `scripts/`, etc. from being stowed into `$HOME`.
 The `Makefile` uses an explicit `PACKAGES` list instead of `*/` glob to avoid stowing non-dotfile dirs.
+`make check` is the lightweight verification entry point for Bash syntax, optional ShellCheck, and Stow dry-runs.
 `chsh` to set zsh as default shell is handled by `bootstrap.sh` (Linux only).
 Git identity is written to `~/.config/git/gitconfig` (included by `git/.gitconfig` via `[include]`, never committed).
