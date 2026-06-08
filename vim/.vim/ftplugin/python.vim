@@ -1,8 +1,3 @@
+" Python: rely on Vim's built-in python syntax + indent (bundled ftplugin
+" already applies PEP 8 4-space indent). Keep the 79-column textwidth.
 setlocal tw=79
-
-let g:pymode_lint_on_write = 0
-" let g:pymode_python = 'python3'
-let g:pymode_rope = 0
-
-let g:pymode_rope_goto_definition_bind = '<C-]>'
-let g:pymode_breakpoint_bind = '<leader>B'

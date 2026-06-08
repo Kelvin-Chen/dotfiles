@@ -36,6 +36,38 @@ make check
 This runs Bash syntax checks, ShellCheck when installed, and a GNU Stow dry-run
 against the explicit package list in the Makefile.
 
+## Verifying the vim fallback
+
+The `vim/` package is a zero-dependency fallback, so it needs no install step.
+To verify it after changes, run the headless smoke test from the repo root:
+
+```sh
+bash scripts/vim_smoke_test.sh
+```
+
+It checks that vim loads with no errors, that the core keybindings are present,
+that no plugin-manager artifacts remain, and that `make check` passes.
+
+Manual sanity check — open a file with only the fallback config and try the
+core muscle-memory keys:
+
+```sh
+vim -u vim/.vimrc README.md
+```
+
+| Action | Expected result |
+|---|---|
+| Press `;` (normal mode) | Enters command-line mode (`:`) |
+| Type `jk` or `kj` (insert mode) | Returns to normal mode |
+| Press `j` / `k` on a wrapped long line | Cursor moves by *screen* line (`gj`/`gk`) |
+| `<Space>w` | Saves the file (`:w!`) |
+| `<Space>cd` | `:lcd` to the file's dir — confirm with `:pwd` |
+| `<Space>tn` | Opens a new tab |
+| `:vsplit` then `<Ctrl-h>`/`<Ctrl-l>` | Moves between windows |
+| `<Space>n` | Opens the **netrw** file explorer |
+| `<Space>f` | Starts `:find ` (type a name, `<Tab>` completes via `path`+`wildmenu`) |
+| Overall | No error messages; statusline + colors render with **no plugins installed** |
+
 ## What's included
 
 | Directory  | What it configures                          |
@@ -44,10 +76,10 @@ against the explicit package list in the Makefile.
 | `intellij/`| IdeaVim settings                            |
 | `kitty/`   | Kitty terminal emulator                     |
 | `latex/`   | latexmk (XeLaTeX)                           |
-| `neovim/`  | Neovim (lua config with lazy.nvim)          |
+| `neovim/`  | Neovim — primary editor (lua config, lazy.nvim) |
 | `shell/`   | Shared shell aliases                        |
 | `tmux/`    | tmux config and statusline                  |
-| `vim/`     | Vim fallback config (vimscript)             |
+| `vim/`     | Minimal, plugin-free Vim fallback (vimscript) |
 | `zsh/`     | Zsh config, plugins (zinit), prompt         |
 
 ## Post-install setup

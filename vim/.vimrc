@@ -1,153 +1,87 @@
+" ~/.vimrc — minimal, plugin-free fallback editor.
+" neovim (~/.config/nvim) is the primary, full-featured editor.
+" Pure vimscript, zero plugins; works out of the box on any stock vim.
+
+" --- Runtime path (load stowed ~/.vim/ftplugin) ---
 let &rtp = expand('~/.vim') . ',' . &rtp
 
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall | source "$HOME/.vimrc"
-endif
-call plug#begin('~/.vim/plugged')
+" --- Filetype + syntax (built-in) ---
+filetype plugin indent on
+syntax enable
 
-function! DoRemote(arg)
-    UpdateRemotePlugins
-endfunction
-
-" UX Plugins
-Plug 'airblade/vim-gitgutter'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'edkolev/tmuxline.vim'
-Plug 'junegunn/vim-easy-align'
-Plug 'Lokaltog/vim-easymotion'
-Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle'}
-Plug 'Raimondi/delimitMate'
-Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'terryma/vim-multiple-cursors'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-surround'
-
-" UI Plugins
-Plug 'catppuccin/vim', { 'as': 'catppuccin' }
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-
-" Language Plugins
-Plug 'chr4/nginx.vim'
-Plug 'clojure-vim/async-clj-omni'
-Plug 'ekalinin/Dockerfile.vim'
-Plug 'elzr/vim-json'
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'fatih/vim-go'
-Plug 'guns/vim-clojure-static'
-Plug 'guns/vim-sexp'
-Plug 'JuliaLang/julia-vim'
-Plug 'lervag/vimtex'
-Plug 'mxw/vim-jsx'
-Plug 'neovimhaskell/haskell-vim'
-Plug 'pangloss/vim-javascript'
-Plug 'plasticboy/vim-markdown'
-Plug 'python-mode/python-mode'
-Plug 'tpope/vim-fireplace'
-Plug 'tpope/vim-git'
-Plug 'vim-ruby/vim-ruby'
-Plug 'vim-scripts/haproxy'
-
-
-" Fix weird issue where julia files have lisp syntax settings enabled.
+" Force julia filetype (.jl is otherwise mis-detected as lisp).
 autocmd BufRead,BufNewFile *.jl set filetype=julia
 
-call plug#end()
-
-filetype plugin indent on
-
-" Map leaders
+" --- Leaders (MUST precede all <leader> mappings) ---
 let mapleader=' '
 let maplocalleader=' '
 
+" --- Core keymaps (parity with neovim init.lua) ---
 " Easier colon
 nnoremap ; :
-
-" Allow vim to read modelines.
-set modeline
-
-" Convenience mappings
-nmap <leader>w :w!<cr>
-nmap <leader>pp :setlocal paste!<cr>
-nmap <leader>cd :lcd %:p:h<cr>
+" Clear search highlight
+nnoremap <Esc> :nohlsearch<CR>
+" Save / paste-toggle / cd-to-file-dir
+nnoremap <leader>w :w!<cr>
+nnoremap <leader>pp :setlocal paste!<cr>
+nnoremap <leader>cd :lcd %:p:h<cr>
+" Insert-mode escape
 inoremap jk <Esc>
 inoremap kj <Esc>
+" Treat long lines as break lines (normal-mode only, matches neovim)
+nnoremap j gj
+nnoremap k gk
+" Window navigation
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+" Tabs
+nnoremap <leader>tn :tabnew<cr>
+nnoremap <leader>te :tabedit 
 
-" Treat long lines as break lines
-noremap j gj
-noremap k gk
+" --- File explorer (netrw, built-in) ---
+nnoremap <leader>n :Explore<cr>
 
-" Move between windows more easily
-nnoremap <C-j> <C-W>j
-nnoremap <C-k> <C-W>k
-nnoremap <C-h> <C-W>h
-nnoremap <C-l> <C-W>l
+" --- Built-in fuzzy file find ---
+set path+=**
+set wildmenu
+set wildmode=longest:full,full
+nnoremap <leader>f :find 
+nnoremap <leader>b :buffer 
 
-" Vim airline settings
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tagbar#enabled = 0
-let g:airline#extensions#tmuxline#enabled = 0
-
-" Tmuxline settings
-let g:tmuxline_powerline_separators = 1
-let g:tmuxline_theme = 'vim_statusline_3'
-let g:tmuxline_preset = 'crosshair'
-
-" Fugitive mappings
-nmap <leader>gc :Git commit<cr>
-nmap <leader>gd :Git diff<cr>
-nmap <leader>gs :Git<cr>
-nmap <leader>gp :Git push<cr>
-
-" CtrlP mappings
-nmap <leader>f :CtrlP .<cr>
-nmap <leader>b :CtrlPBuffer<cr>
-let g:ctrlp_map = ''
-
-" Easier tabs
-nmap <leader>tn :tabnew
-nmap <leader>te :tabedit
-
-" Toggle Nerdtree
-nmap <leader>n :NERDTreeToggle<cr>
-
-" Toggle tagbar
-nmap <leader>tb :TagbarToggle<cr>
-let g:tagbar_autofocus = 1
-
-" easy-align mappings
-vmap <Enter> <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
-
-" easy-motion mappings
-nmap  <leader><leader>/ <Plug>(easymotion-sn)
-
-" Display settings
-syntax enable
-set nu
+" --- Display ---
+set modeline
+set number
+set relativenumber
 set hlsearch
 set colorcolumn=80
 
-" Colorscheme and true color settings
+" --- Search behavior (mirrors neovim) ---
+set ignorecase
+set smartcase
+
+" --- Splits (mirrors neovim) ---
+set splitright
+set splitbelow
+
+" --- Colorscheme (built-in, fallback-safe) ---
 if has('termguicolors')
     set termguicolors
 endif
-colorscheme catppuccin_mocha
+silent! colorscheme habamax
 
-" Disable backup
+" --- Statusline (built-in) ---
+set laststatus=2
+set statusline=%f\ %m%r%h%w%=%y\ %l:%c\ %p%%
+
+" --- Backups off ---
 set noswapfile
-set nowb
+set nowritebackup
 set nobackup
 
-" Enable backspace
+" --- Editing behavior ---
 set backspace=indent,eol,start
-
-" Indent/tabs
 set expandtab
 set smarttab
 set shiftwidth=4
@@ -156,24 +90,6 @@ set autoindent
 set smartindent
 set wrap
 
-" Always show status bar
-set laststatus=2
-
-" Let CtrlP ignore files in gitignore.
-let g:ctrlp_user_command = [
-    \ '.git',
-    \ 'cd %s && git ls-files -co --exclude-standard'
-    \ ]
-
-let delimitMate_expand_cr = 1
-
-" Add space after comments delimeter.
-let g:NERDSpaceDelims = 1
-
-let g:sexp_mappings = {
-    \ 'sexp_round_head_wrap_element': '<LocalLeader>e(',
-    \ 'sexp_round_tail_wrap_element': '<LocalLeader>e)',
-    \ }
-
-" Turn off delimitmate for clojure
-autocmd InsertEnter *.clj DelimitMateOff
+" --- Esc-map terminal responsiveness ---
+set ttimeout
+set ttimeoutlen=10

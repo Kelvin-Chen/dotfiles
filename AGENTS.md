@@ -60,6 +60,22 @@ Lua config using lazy.nvim. Plugin specs are split by category in `lua/plugins/`
 - `navigation.lua` — navigation plugins
 - `git.lua` — git integration
 
+### Vim (`vim/`)
+
+Minimal, **plugin-free** vimscript fallback — no plugin manager (no vim-plug)
+and no external dependencies, so it works out of the box on any machine with
+plain `vim`. In contrast to `neovim/` (the primary, full-featured editor),
+`vim/` relies only on built-ins:
+
+- Built-in colorscheme and a hand-written `statusline` (no airline/catppuccin).
+- netrw for the file explorer (`<leader>n` → `:Explore`) and `:find` with
+  `path+=**` / `wildmenu` for file finding (`<leader>f`).
+- Built-in syntax highlighting and filetype detection; `vim/.vim/ftplugin/*`
+  holds only plain per-filetype options (indent, `textwidth`, etc.).
+- Shares neovim's core muscle-memory maps: leader = `<Space>`, `;`→`:`,
+  `jk`/`kj`→`<Esc>`, `j`/`k`→`gj`/`gk`, `<C-h/j/k/l>` window nav, `<leader>w`
+  save, `<leader>cd`, `<leader>tn`.
+
 ### Zsh (`zsh/`)
 
 - `.zshenv` — minimal environment setup: XDG base directories, PATH, `$EDITOR`, `$LANG`, `$PAGER`, NVM/FZF defaults, and optional `~/.zshenv_local`
