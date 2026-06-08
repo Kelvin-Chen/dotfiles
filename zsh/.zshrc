@@ -46,7 +46,17 @@ fi
 
 # NVM — lazy load on first use to avoid startup overhead, but only when installed.
 NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+# Some environments (e.g. Google corp Linux) pre-define `npm`/`npx` as aliases.
+# zsh alias-expands while *reading* a same-named function definition, so the
+# shims below are a parse error whenever those aliases exist — and zsh reads
+# (and thus expands) the whole if-block even when the condition is false.
+# Disable alias expansion just while this block is read, then restore it. This
+# is a standalone command so it takes effect before the block is parsed.
+unsetopt aliases
 if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+  # nvm is installed, so its commands should win: drop any clashing aliases so
+  # the lazy-load shims (functions) are what actually run.
+  unalias nvm node npm npx 2>/dev/null
   _nvm_load() {
     source "$NVM_DIR/nvm.sh"
     [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
@@ -56,6 +66,7 @@ if [[ -s "$NVM_DIR/nvm.sh" ]]; then
   npm()  { unfunction node npm npx; _nvm_load; npm "$@"; }
   npx()  { unfunction node npm npx; _nvm_load; npx "$@"; }
 fi
+setopt aliases
 
 # Operating system specific configuration.
 case "$(uname -s)" in

@@ -36,6 +36,12 @@ make check
 This runs Bash syntax checks, ShellCheck when installed, and a GNU Stow dry-run
 against the explicit package list in the Makefile.
 
+To run the headless smoke tests for the editors and shell config:
+
+```sh
+make test
+```
+
 ## Verifying the vim fallback
 
 The `vim/` package is a zero-dependency fallback, so it needs no install step.
@@ -67,6 +73,21 @@ vim -u vim/.vimrc README.md
 | `<Space>n` | Opens the **netrw** file explorer |
 | `<Space>f` | Starts `:find ` (type a name, `<Tab>` completes via `path`+`wildmenu`) |
 | Overall | No error messages; statusline + colors render with **no plugins installed** |
+
+## Verifying the zsh config
+
+`zsh/.zshrc` runs on both macOS and Linux (including Google corp machines). To
+check it after changes, run the hermetic, cross-platform smoke test:
+
+```sh
+bash scripts/zsh_smoke_test.sh
+```
+
+It sources the real `.zshrc` inside a throwaway `$HOME` with a stubbed zinit (no
+network) under several simulated environments and asserts it loads without parse
+errors. In particular it guards the regression where a pre-existing `npm`/`npx`
+alias (as defined on corp Linux) collides with the nvm lazy-load function shims,
+and it checks the `uname` OS-branch dispatch and the nvm lazy-load path.
 
 ## What's included
 
