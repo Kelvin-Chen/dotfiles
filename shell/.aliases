@@ -17,10 +17,16 @@ echo_ip () {
 
 alias emacs="emacs -nw"
 
-if ls --version &>/dev/null 2>&1; then
-    alias ls='ls -ogh --color=auto'  # GNU ls (Linux)
+if [[ "$OSTYPE" == darwin* ]]; then
+    # macOS ships BSD ls, but Homebrew coreutils may shadow it with GNU ls.
+    # Only this case is ambiguous, so it is the only one worth a subprocess.
+    if ls --version &>/dev/null; then
+        alias ls='ls -ogh --color=auto'  # GNU ls (coreutils)
+    else
+        alias ls='ls -oghG'              # BSD ls
+    fi
 else
-    alias ls='ls -oghG'              # BSD ls (macOS)
+    alias ls='ls -ogh --color=auto'      # GNU ls (Linux)
 fi
 
 fzfc () {

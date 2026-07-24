@@ -79,9 +79,30 @@ plain `vim`. In contrast to `neovim/` (the primary, full-featured editor),
 ### Zsh (`zsh/`)
 
 - `.zshenv` — minimal environment setup: XDG base directories, PATH, `$EDITOR`, `$LANG`, `$PAGER`, NVM/FZF defaults, and optional `~/.zshenv_local`
-- `.zshrc` — bootstraps zinit when git is available, loads oh-my-zsh snippets eagerly, defers heavy plugins (autosuggestions, fast-syntax-highlighting, completions) via turbo/async mode, and lazy-loads NVM only when installed
+- `.zshrc` — bootstraps zinit when git is available, loads oh-my-zsh snippets eagerly in `light-mode`, defers heavy plugins (autosuggestions, fast-syntax-highlighting, completions) via turbo/async mode, and lazy-loads NVM only when installed
 - `shell/.aliases` — shared aliases (`vi`/`vim` → `$EDITOR`, `fzfc` fuzzy grep, etc.)
-- `.zsh/completions/` — custom zsh completion scripts (e.g. `_claude`). Stowed as a directory symlink. `.zshrc` prepends `$HOME/.zsh/completions` to `fpath` before `OMZL::completion.zsh` (which calls compinit eagerly).
+- `.zsh/completions/` — custom zsh completion scripts (e.g. `_claude`). Stowed as a directory symlink. `.zshrc` prepends `$HOME/.zsh/completions` to `fpath` before the turbo block, because that block is where `compinit` runs.
+- `.zsh/lib/cached-source.zsh` — defines `cached_source`, which sources a file through a local copy under `$XDG_CACHE_HOME/zsh` and refreshes it in a detached background job. Used for config on network filesystems (Piper `/google/src/head`, `/google/data/ro`), where a direct read costs ~100ms per shell and can stall for several hundred. Tradeoff: an edit to the source lands in the *next* shell.
+
+#### Startup performance
+
+Two constraints are easy to regress and cost real time, so both are commented
+in `.zshrc`:
+
+- **Keep the turbo (`zinit wait lucid`) list short.** The queue is drained
+  roughly one item per prompt, so anything added there delays everything
+  behind it. Moving the oh-my-zsh snippets into turbo saved only ~21ms but
+  left `gst`/`docker` aliases undefined for the first several commands and
+  pushed the syntax highlighter several prompts out. They stay eager.
+- **`compinit` should run exactly once here.** `/etc/zsh/zshrc` (corp-managed)
+  already runs an audited `compinit` before `.zshrc`, but it does so before
+  `fpath` is extended, so the turbo block runs the one that matters. Each
+  extra call re-runs `compaudit` over every `fpath` entry (~60ms). Note that
+  `OMZL::completion.zsh` only sets zstyles — it does *not* call `compinit`.
+
+To profile, remember `zprof` only measures *functions*: top-level `source` and
+network I/O are invisible to it. Use `PS4='+$EPOCHREALTIME %N:%i> '` with
+`setopt xtrace` to get per-line wall-clock timings.
 
 ### Tmux (`tmux/.tmux.conf`)
 

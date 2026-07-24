@@ -16,24 +16,42 @@ if [[ -r "$ZINIT_HOME/zinit.zsh" ]]; then
   #      Plugins
   #####################
 
-  # Oh-my-zsh libs
-  zinit snippet OMZL::clipboard.zsh
+  # Custom completions must join fpath before compinit runs (turbo block below).
   [[ -d "$HOME/.zsh/completions" ]] && fpath=("$HOME/.zsh/completions" $fpath)
-  zinit snippet OMZL::completion.zsh
-  zinit snippet OMZL::history.zsh
-  zinit snippet OMZL::key-bindings.zsh
 
-  # Oh-my-zsh plugins
-  zinit snippet OMZP::git
-  zinit snippet OMZP::gnu-utils
-  zinit snippet OMZP::docker
-  zinit snippet OMZP::bazel
+  # Oh-my-zsh libs and plugins.
+  #
+  # These stay eager on purpose. zinit's turbo queue is drained one item per
+  # prompt, so deferring these (~21ms total) would leave `gst`, `docker` and
+  # friends undefined for the first several commands, and would push the
+  # syntax highlighter and autosuggestions — which are queued behind them —
+  # several prompts out.
+  #
+  # `light-mode` skips zinit's "investigation" pass, where it diffs the set of
+  # functions/parameters/aliases/widgets before and after sourcing in order to
+  # support `zinit report` and `zinit unload`. Neither is used here. Worth
+  # ~15ms of median startup; `compdef` calls are still captured, so completions
+  # are unaffected (verified: identical $#_comps with and without).
+  zinit light-mode for \
+    OMZL::clipboard.zsh \
+    OMZL::completion.zsh \
+    OMZL::history.zsh \
+    OMZL::key-bindings.zsh \
+    OMZP::git \
+    OMZP::gnu-utils \
+    OMZP::docker \
+    OMZP::bazel
 
-  # Theme
+  # Theme — sets PROMPT, so it cannot be deferred.
   zinit ice as"theme"
   zinit light dracula/zsh
 
-  # Heavy plugins — loaded asynchronously after prompt appears (turbo mode)
+  # Heavy plugins — loaded asynchronously after prompt appears (turbo mode).
+  # Keep this list short: everything queued here waits an extra prompt.
+  #
+  # This is also where compinit runs. /etc/zsh/zshrc already runs an audited
+  # compinit before this file, but that happens before the fpath additions
+  # above, so a second pass is required for them to be visible.
   zinit wait lucid for \
     zsh-users/zsh-completions \
     atinit"zicompinit; zicdreplay" \
@@ -68,12 +86,17 @@ if [[ -s "$NVM_DIR/nvm.sh" ]]; then
 fi
 setopt aliases
 
+# Helper for sourcing config that lives on a network filesystem. Loaded before
+# the machine-specific files below, which are its main callers.
+[[ -r "$HOME/.zsh/lib/cached-source.zsh" ]] && source "$HOME/.zsh/lib/cached-source.zsh"
+
 # Operating system specific configuration.
-case "$(uname -s)" in
-  Darwin)
+# $OSTYPE is a zsh built-in, so this avoids forking `uname` on every startup.
+case "$OSTYPE" in
+  darwin*)
     [[ -r "$HOME/.zshrc_mac" ]] && source "$HOME/.zshrc_mac"
     ;;
-  Linux*)
+  linux*)
     [[ -r "$HOME/.zshrc_linux" ]] && source "$HOME/.zshrc_linux"
     ;;
 esac

@@ -2,7 +2,7 @@
 
 PACKAGES = git intellij kitty latex neovim shell tmux vim zsh
 SCRIPTS = install.sh scripts/bootstrap.sh scripts/common.sh scripts/macos.sh scripts/linux.sh
-SMOKE_TESTS = scripts/vim_smoke_test.sh scripts/zsh_smoke_test.sh
+SMOKE_TESTS = scripts/vim_smoke_test.sh scripts/zsh_smoke_test.sh scripts/cached_source_test.sh
 
 all:
 	stow --verbose --target=$(HOME) --restow $(PACKAGES)

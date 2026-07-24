@@ -46,6 +46,9 @@ trap 'rm -rf "$TMP"' EXIT
 DRIVER="$TMP/driver.zsh"
 cat > "$DRIVER" <<'EOF'
 [[ -n "${PRESET_NPM_ALIASES:-}" ]] && { alias npm='gpkg npm'; alias npx='gpkg npx'; }
+# .zshrc branches on $OSTYPE. zsh resets OSTYPE at startup, so an exported
+# value from the environment is ignored; assign it here instead, inside zsh.
+[[ -n "${FAKE_OSTYPE:-}" ]] && OSTYPE="$FAKE_OSTYPE"
 source "$1"
 [[ -n "${INVOKE_NPM:-}" ]] && npm hello
 print -r -- "WHENCE npm=$(whence -w npm 2>/dev/null)"
@@ -57,7 +60,7 @@ EOF
 
 # build_home <name> [nvm] [os: linux|mac]
 #   Creates a hermetic fake $HOME with a no-op zinit stub (so no network clone),
-#   optionally a fake nvm install, and a fake `uname` returning the chosen OS
+#   optionally a fake nvm install, and the $OSTYPE value for the chosen OS
 #   along with the matching ~/.zshrc_<os> marker file. Echoes the home path.
 build_home() {
   local name="$1" want_nvm="${2:-}" os="${3:-linux}"
@@ -66,13 +69,10 @@ build_home() {
   # No-op zinit so every `zinit ...` call in .zshrc is a harmless no-op.
   printf 'zinit() { : }\n' > "$home/.local/share/zinit/zinit.git/zinit.zsh"
 
-  # Fake `uname` to exercise the OS case statement deterministically.
-  local uname_out="Linux"; [[ "$os" == "mac" ]] && uname_out="Darwin"
-  cat > "$home/bin/uname" <<EOF2
-#!/bin/sh
-echo "$uname_out"
-EOF2
-  chmod +x "$home/bin/uname"
+  # Record the $OSTYPE to simulate, so the OS case statement is exercised
+  # deterministically regardless of the host we are running on.
+  local ostype_out="linux-gnu"; [[ "$os" == "mac" ]] && ostype_out="darwin23.0"
+  printf '%s' "$ostype_out" > "$home/.ostype"
 
   # OS-specific rc files leave a marker we can assert on.
   printf 'export OS_RC_LOADED=linux\n' > "$home/.zshrc_linux"
@@ -96,9 +96,12 @@ EOF3
 # INVOKE_NPM from the environment. Stdout+stderr captured by caller.
 run_zshrc() {
   local home="$1"
+  local fake_ostype=""
+  [[ -r "$home/.ostype" ]] && fake_ostype="$(cat "$home/.ostype")"
   HOME="$home" XDG_DATA_HOME="$home/.local/share" \
     NVM_DIR="$home/.nvm" \
     PATH="$home/bin:$PATH" \
+    FAKE_OSTYPE="$fake_ostype" \
     "$ZSH_BIN" -f "$DRIVER" "$ZSHRC" 2>&1
 }
 
@@ -157,7 +160,7 @@ clean_load   "lazy-load" "$OUT"
 assert_line  "calling npm sources nvm and runs the real npm" "$OUT" "NPM_REAL hello"
 
 # --- 5. cross-platform OS branch dispatch ---
-section "5. OS branch dispatch (uname case statement)"
+section "5. OS branch dispatch (\$OSTYPE case statement)"
 H="$(build_home linux_os "" linux)"
 OUT="$(run_zshrc "$H")"
 clean_load  "linux branch" "$OUT"
