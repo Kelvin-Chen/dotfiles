@@ -10,6 +10,7 @@ brew "tree"
 brew "node"
 brew "jj"
 brew "shellcheck"
+brew "tree-sitter-cli"  # compiles nvim-treesitter parsers
 
 # Terminal
 brew "fzf"
@@ -19,3 +20,4 @@ brew "zellij"
 
 # Casks
 cask "kitty"
+cask "font-fira-code"     # font_family in kitty.conf

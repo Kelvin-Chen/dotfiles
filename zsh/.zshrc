@@ -1,3 +1,24 @@
+# Terminal fallback. Must run before anything reads $terminfo (key bindings,
+# zle, the prompt).
+#
+# Terminals like kitty set TERM=xterm-kitty and rely on a terminfo entry that
+# only exists where kitty is installed (it points $TERMINFO at its own app
+# bundle). After ssh, sudo, `docker exec`, or inside a tmux server that
+# outlived the terminal, that entry is gone and every curses program fails with
+# "unknown terminal type". The same happens with tmux-256color on hosts with an
+# old ncurses. An empty $terminfo means the lookup failed, so drop to an entry
+# that exists everywhere. No forks: this costs nothing when TERM is fine.
+if [[ -n "${TERM:-}" ]] && zmodload zsh/terminfo 2>/dev/null && (( ${#terminfo} == 0 )); then
+  case "$TERM" in
+    tmux*|screen*) export TERM=screen-256color ;;
+    *)             export TERM=xterm-256color ;;
+  esac
+  # $terminfo is only re-read on assignment in interactive shells.
+  if [[ -o interactive ]] && (( ${#terminfo} == 0 )); then
+    export TERM="${TERM%-256color}"
+  fi
+fi
+
 # Bootstrap zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 if [[ ! -r "$ZINIT_HOME/zinit.zsh" ]]; then

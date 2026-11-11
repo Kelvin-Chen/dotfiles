@@ -1,5 +1,15 @@
 export LANG="${LANG:-en_US.UTF-8}"
-export COLORTERM="${COLORTERM:-truecolor}"
+
+# Advertise 24-bit color only where it is plausible. ssh does not forward
+# COLORTERM, so it has to be re-derived on the remote side, but claiming it
+# unconditionally garbles colors on the Linux console, Apple Terminal, and
+# plain `xterm`/`screen` TERMs (nvim and vim key `termguicolors` off this).
+if [[ -z "${COLORTERM:-}" && "${TERM_PROGRAM:-}" != Apple_Terminal ]]; then
+    case "${TERM:-}" in
+        *256color*|*-direct|xterm-kitty|xterm-ghostty|alacritty*|wezterm|foot*)
+            export COLORTERM=truecolor ;;
+    esac
+fi
 
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
@@ -21,9 +31,6 @@ path=(
 )
 export PATH
 
-export EDITOR="${EDITOR:-nvim}"
-export GIT_EDITOR="${GIT_EDITOR:-$EDITOR}"
-
 export PAGER="${PAGER:-less}"
 
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
@@ -40,3 +47,13 @@ export FZF_DEFAULT_OPTS
 # Source machine specific configuration
 LOCAL_ZSHENV="$HOME/.zshenv_local"
 [[ -r "$LOCAL_ZSHENV" ]] && source "$LOCAL_ZSHENV"
+
+# Pick the best editor that is actually installed. Runs after the local file
+# so PATH additions made there are visible, and an $EDITOR set there wins.
+if [[ -z "${EDITOR:-}" ]]; then
+    for EDITOR in nvim vim vi; do
+        (( $+commands[$EDITOR] )) && break
+    done
+fi
+export EDITOR
+export GIT_EDITOR="${GIT_EDITOR:-$EDITOR}"

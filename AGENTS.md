@@ -104,6 +104,31 @@ To profile, remember `zprof` only measures *functions*: top-level `source` and
 network I/O are invisible to it. Use `PS4='+$EPOCHREALTIME %N:%i> '` with
 `setopt xtrace` to get per-line wall-clock timings.
 
+### Terminal compatibility (TERM / terminfo / truecolor)
+
+kitty sets `TERM=xterm-kitty`, whose terminfo entry exists only where kitty is
+installed (`$TERMINFO` points into the app bundle). The configs are written to
+survive hosts without it, and without forking on the happy path:
+
+- `zsh/.zshrc` (top) — if `$terminfo` is empty the entry for `$TERM` is
+  missing, so fall back to `xterm-256color` (`screen-256color` for
+  `tmux*`/`screen*`). Must stay above anything that reads `$terminfo`.
+- `shell/.aliases` — `ssh` is a function that presents kitty/ghostty/alacritty/
+  wezterm/foot as `xterm-256color` to the remote host, covering hosts that do
+  not have these dotfiles.
+- `zsh/.zshenv` — defaults `COLORTERM=truecolor` only for TERMs that plausibly
+  support it (not the Linux console, Apple Terminal, or plain `xterm`), because
+  ssh does not forward it. vim and nvim key `termguicolors` off `COLORTERM`.
+- `tmux/.tmux.conf` — `default-terminal` falls back to `screen-256color` when
+  `tmux-256color` is not in the terminfo database.
+- `kitty.conf` deliberately does *not* set `term`; `term xterm-256color` in
+  `~/.config/kitty/local.conf` is the documented last resort.
+
+`$EDITOR` is the first of nvim/vim/vi that is installed (resolved after
+`~/.zshenv_local`), so the `vi`/`vim` aliases never point at a missing binary.
+Bootstrap scripts must stay bash 3.2 compatible (macOS `/bin/bash`): no
+`${var,,}`, associative arrays, or `mapfile`.
+
 ### Tmux (`tmux/.tmux.conf`)
 
 Plugins via tpm: vim-tmux-navigator, tmux-sensible, tmux-yank. Vi-style copy with OSC 52 clipboard (works over SSH). Statusline uses terminal color indices (color-scheme agnostic).
@@ -113,7 +138,7 @@ Plugins via tpm: vim-tmux-navigator, tmux-sensible, tmux-yank. Vi-style copy wit
 - `install.sh` — curl target at repo root; checks for git, clones repo via HTTPS, execs bootstrap
 - `scripts/bootstrap.sh` — orchestrator; interactive phase (git identity, SSH key), then unattended
 - `scripts/macos.sh` — Homebrew install if missing + `brew bundle`
-- `scripts/linux.sh` — apt/pacman detection, best-effort package install
+- `scripts/linux.sh` — apt/pacman/dnf detection, best-effort package install
 - `scripts/common.sh` — stow conflict backup, `make` (stow), tpm clone
 
 All scripts use `#!/usr/bin/env bash` and are idempotent.

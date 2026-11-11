@@ -70,7 +70,9 @@ OUT="$(run "cached_source '$SRC'")"
 assert_marker "serves cached copy, not the updated source" "$OUT" "v1"
 
 section "3. A stale cache is served now, then refreshed for next time"
-touch -d '2 hours ago' "$CACHE"
+# `touch -d '2 hours ago'` is GNU-only; build a -t timestamp for BSD/macOS too.
+STALE_TS="$(date -v-2H +%Y%m%d%H%M 2>/dev/null || date -d '2 hours ago' +%Y%m%d%H%M)"
+touch -t "$STALE_TS" "$CACHE"
 OUT="$(run "cached_source '$SRC'; sleep 1")"
 assert_marker "stale cache still served immediately" "$OUT" "v1"
 OUT="$(run "cached_source '$SRC'")"

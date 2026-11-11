@@ -7,8 +7,6 @@
     followTags = true
 [pull]
     ff = only
-[diff]
-    compactionHeuristic = true
 [fetch]
     prune = true
 [color]
@@ -29,4 +27,4 @@
 
 # Machine specific configuration
 [include]
-    path = .config/git/gitconfig
+    path = ~/.config/git/gitconfig

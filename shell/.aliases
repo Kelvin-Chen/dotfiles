@@ -1,7 +1,23 @@
 # vi:ft=zsh
 
-alias vi="$EDITOR"
-alias vim="$EDITOR"
+if [[ -n "${EDITOR:-}" ]] && command -v "$EDITOR" &>/dev/null; then
+    alias vi="$EDITOR"
+    alias vim="$EDITOR"
+fi
+
+# Remote hosts almost never have terminfo for newer terminals (xterm-kitty,
+# xterm-ghostty, ...), which breaks vim/less/tmux/htop over ssh with "unknown
+# terminal type". Present as xterm-256color instead: every host has it, and
+# these terminals are all xterm-compatible. `function` syntax (rather than
+# `ssh()`) so a pre-existing `ssh` alias cannot turn this into a parse error.
+function ssh {
+    case "${TERM:-}" in
+        xterm-kitty|xterm-ghostty|alacritty*|wezterm|foot*|rio)
+            TERM=xterm-256color command ssh "$@" ;;
+        *)
+            command ssh "$@" ;;
+    esac
+}
 
 echo_ip () {
     if command -v dig &>/dev/null; then
@@ -25,8 +41,12 @@ if [[ "$OSTYPE" == darwin* ]]; then
     else
         alias ls='ls -oghG'              # BSD ls
     fi
-else
+elif [[ "$OSTYPE" == linux* ]]; then
     alias ls='ls -ogh --color=auto'      # GNU ls (Linux)
+elif ls --color=auto -d . &>/dev/null; then
+    alias ls='ls -ogh --color=auto'      # GNU ls elsewhere
+else
+    alias ls='ls -ogh'                   # BSD/other: stick to POSIX-ish flags
 fi
 
 fzfc () {

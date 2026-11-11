@@ -15,7 +15,8 @@ return {
                     file_ignore_patterns = { '^%.git/' },
                 },
             })
-            telescope.load_extension('fzf')
+            -- fzf-native needs `make` + a C compiler; fall back to the Lua sorter.
+            pcall(telescope.load_extension, 'fzf')
 
             local builtin = require('telescope.builtin')
             vim.keymap.set('n', '<leader>f', function()

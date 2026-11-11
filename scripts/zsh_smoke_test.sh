@@ -46,6 +46,7 @@ trap 'rm -rf "$TMP"' EXIT
 DRIVER="$TMP/driver.zsh"
 cat > "$DRIVER" <<'EOF'
 [[ -n "${PRESET_NPM_ALIASES:-}" ]] && { alias npm='gpkg npm'; alias npx='gpkg npx'; }
+[[ -n "${PRESET_SSH_ALIAS:-}" ]] && alias ssh='corp-ssh'
 # .zshrc branches on $OSTYPE. zsh resets OSTYPE at startup, so an exported
 # value from the environment is ignored; assign it here instead, inside zsh.
 [[ -n "${FAKE_OSTYPE:-}" ]] && OSTYPE="$FAKE_OSTYPE"
@@ -56,6 +57,8 @@ print -r -- "WHENCE npx=$(whence -w npx 2>/dev/null)"
 print -r -- "WHENCE node=$(whence -w node 2>/dev/null)"
 print -r -- "WHENCE nvm=$(whence -w nvm 2>/dev/null)"
 print -r -- "OS_RC=${OS_RC_LOADED:-none}"
+print -r -- "TERM_OUT=${TERM:-}"
+print -r -- "WHENCE ssh=$(whence -w ssh 2>/dev/null)"
 EOF
 
 # build_home <name> [nvm] [os: linux|mac]
@@ -170,6 +173,26 @@ H="$(build_home mac_os "" mac)"
 OUT="$(run_zshrc "$H")"
 clean_load  "darwin branch" "$OUT"
 assert_line "Darwin sources ~/.zshrc_mac" "$OUT" "OS_RC=mac"
+
+# --- 6. TERM fallback when the terminfo entry is missing ---
+# Simulates landing on a host without kitty's terminfo (ssh, sudo, containers).
+section "6. TERM fallback for missing terminfo entries"
+H="$(build_home term_fb "" linux)"
+OUT="$(TERM=xterm-no-such-terminal run_zshrc "$H")"
+clean_load  "unknown xterm-like TERM" "$OUT"
+assert_line "unknown TERM falls back to xterm-256color" "$OUT" "TERM_OUT=xterm-256color"
+
+OUT="$(TERM=tmux-no-such-terminal run_zshrc "$H")"
+assert_line "unknown tmux TERM falls back to screen-256color" "$OUT" "TERM_OUT=screen-256color"
+
+OUT="$(TERM=xterm-256color run_zshrc "$H")"
+assert_line "known TERM is left alone" "$OUT" "TERM_OUT=xterm-256color"
+
+# The ssh wrapper lives in shell/.aliases, sourced via ~/.aliases.
+cp "$REPO_ROOT/shell/.aliases" "$H/.aliases"
+OUT="$(PRESET_SSH_ALIAS=1 TERM=xterm-256color run_zshrc "$H")"
+clean_load  "ssh wrapper with pre-set ssh alias" "$OUT"
+assert_line "ssh wrapper is defined" "$OUT" "WHENCE ssh=ssh: "
 
 section "Summary"
 printf '  passed: %d   failed: %d\n' "$PASS" "$FAIL"

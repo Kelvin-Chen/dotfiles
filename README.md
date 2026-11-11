@@ -13,7 +13,7 @@ curl -fsSL https://raw.githubusercontent.com/Kelvin-Chen/dotfiles/master/install
 This will:
 1. Clone the repo to `~/dotfiles`
 2. Ask for your git name/email and whether to generate an SSH key
-3. Install packages (Homebrew + Brewfile on macOS; apt/pacman on Linux)
+3. Install packages (Homebrew + Brewfile on macOS; apt/pacman/dnf on Linux)
 4. Symlink all dotfiles via GNU Stow
 5. Clone the tmux plugin manager
 

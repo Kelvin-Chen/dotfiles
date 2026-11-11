@@ -55,8 +55,9 @@ fi
 
 # SSH key
 SSH_KEY_REQUESTED=false
-read -rp "==> Generate SSH key for GitHub? [y/N] " ssh_answer
-if [[ "${ssh_answer,,}" == "y" ]]; then
+ssh_answer=""
+read -rp "==> Generate SSH key for GitHub? [y/N] " ssh_answer || true
+if [[ "$ssh_answer" == [Yy]* ]]; then
   SSH_KEY_REQUESTED=true
 fi
 
@@ -121,7 +122,7 @@ if [[ "$SSH_KEY_REQUESTED" == true ]]; then
   if [[ "$CURRENT_REMOTE" == https://github.com/* ]]; then
     SSH_REMOTE="${CURRENT_REMOTE/https:\/\/github.com\//git@github.com:}"
     read -rp "==> Convert git remote to SSH ($SSH_REMOTE)? [y/N] " convert_answer
-    if [[ "${convert_answer,,}" == "y" ]]; then
+    if [[ "$convert_answer" == [Yy]* ]]; then
       git -C "$DOTFILES_DIR" remote set-url origin "$SSH_REMOTE"
       success "Remote updated to $SSH_REMOTE"
     fi
@@ -133,8 +134,11 @@ if [[ "$UNAME" == "Linux" ]]; then
   ZSH_PATH="$(command -v zsh || true)"
   if [[ -n "$ZSH_PATH" && "$SHELL" != "$ZSH_PATH" ]]; then
     info "Setting zsh as default shell..."
-    chsh -s "$ZSH_PATH"
-    success "Default shell set to zsh. Re-login to apply."
+    if chsh -s "$ZSH_PATH"; then
+      success "Default shell set to zsh. Re-login to apply."
+    else
+      warn "chsh failed (managed account, or zsh missing from /etc/shells?) — set your shell manually."
+    fi
   fi
 fi
 

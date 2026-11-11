@@ -66,9 +66,17 @@ set splitright
 set splitbelow
 
 " --- Colorscheme (built-in, fallback-safe) ---
-if has('termguicolors')
+" Only use 24-bit color when the terminal advertises it; otherwise colors are
+" garbled on Apple Terminal, the Linux console, etc.
+if has('termguicolors') && ($COLORTERM ==# 'truecolor' || $COLORTERM ==# '24bit')
+    " Vim only knows the truecolor escapes for TERM=xterm*; spell them out so
+    " tmux-256color, xterm-kitty and friends work too.
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
 endif
+" Disable background color erase, which kitty (and others) do not implement.
+let &t_ut = ''
 silent! colorscheme habamax
 
 " --- Statusline (built-in) ---

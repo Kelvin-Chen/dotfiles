@@ -6,7 +6,12 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.hlsearch = true
 vim.opt.colorcolumn = '80'
-vim.opt.termguicolors = vim.env.COLORTERM == 'truecolor' or vim.env.COLORTERM == '24bit'
+-- Neovim detects truecolor support itself (COLORTERM, terminfo, and querying
+-- the terminal). Only force it on; never force it off, so detection still works
+-- where COLORTERM was not forwarded (ssh, sudo).
+if vim.env.COLORTERM == 'truecolor' or vim.env.COLORTERM == '24bit' then
+    vim.opt.termguicolors = true
+end
 vim.opt.signcolumn = 'yes'
 vim.opt.cursorline = true
 
@@ -51,14 +56,24 @@ vim.keymap.set('n', '<C-l>', '<C-w>l')
 -- Tabs
 vim.keymap.set('n', '<leader>tn', '<cmd>tabnew<cr>', { desc = 'New tab' })
 
--- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Prev diagnostic' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
+-- Diagnostic keymaps ([d / ]d are built in since 0.11)
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Diagnostic float' })
 
 -- Disable unused providers
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
+
+-- The plugin specs use 0.11+ APIs (vim.lsp.config, vim.uv). On older builds
+-- (distro packages are often years behind) keep the options and keymaps above
+-- and stop here rather than failing with a wall of errors.
+if vim.fn.has('nvim-0.11') == 0 then
+    vim.api.nvim_echo({ { 'nvim < 0.11: plugins disabled (see ~/.config/nvim/init.lua)', 'WarningMsg' } }, true, {})
+    return
+end
+if vim.fn.executable('git') == 0 then
+    vim.api.nvim_echo({ { 'git not found: plugins disabled', 'WarningMsg' } }, true, {})
+    return
+end
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
