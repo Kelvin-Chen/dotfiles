@@ -31,7 +31,64 @@ if [[ ! -r "$ZINIT_HOME/zinit.zsh" ]]; then
 fi
 
 if [[ -r "$ZINIT_HOME/zinit.zsh" ]]; then
+  # Byte-compile zinit itself. zinit compiles the plugins it manages but not
+  # its own 3000-line entry point, which otherwise gets re-parsed by every
+  # shell (~4ms). `source` picks up the .zwc automatically while it is newer
+  # than the source, so a `zinit self-update` just triggers one recompile.
+  if [[ ! -e "$ZINIT_HOME/zinit.zsh.zwc" || "$ZINIT_HOME/zinit.zsh" -nt "$ZINIT_HOME/zinit.zsh.zwc" ]]; then
+    zcompile "$ZINIT_HOME/zinit.zsh" 2>/dev/null
+  fi
   source "$ZINIT_HOME/zinit.zsh"
+
+  # Answer `git version` from a cache while the eager plugins load.
+  #
+  # OMZP::git asks once and the dracula theme asks twice, purely to gate
+  # features on git >= 2.8/2.13/2.14/2.30. Each ask is a fork+exec, and on
+  # macOS /usr/bin/git is an xcrun shim that takes ~6ms — together these were
+  # a third of startup. The cache is rewritten in the background once a day
+  # (or right away if the git binary changed), so an upgrade is noticed by the
+  # shell after next. The `git` function exists only until the theme has
+  # loaded and passes everything except a bare `git version` straight through.
+  () {
+    emulate -L zsh
+    (( $+commands[git] )) || return 0
+    local dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+    local cache="$dir/git-version"
+    typeset -g _git_version_line=
+    [[ -r "$cache" ]] && _git_version_line="$(<$cache)"   # $(<file) does not fork
+    if [[ "$_git_version_line" != "git version "* ]]; then
+      # No (usable) cache yet: pay for the fork once.
+      _git_version_line="$(command git version 2>/dev/null)"
+      [[ -d "$dir" ]] || mkdir -p -- "$dir" 2>/dev/null
+      print -r -- "$_git_version_line" >| "$cache" 2>/dev/null
+    else
+      local -a stale=( "$cache"(N.mh+24) )
+      if (( ${#stale} )) || [[ "$commands[git]" -nt "$cache" ]]; then
+        ( command git version >| "$cache.$$.new" 2>/dev/null &&
+            mv -f -- "$cache.$$.new" "$cache" 2>/dev/null ||
+            rm -f -- "$cache.$$.new" 2>/dev/null ) >/dev/null 2>&1 &!
+      fi
+    fi
+  }
+  if [[ "${_git_version_line:-}" == "git version "* ]] && (( ! $+functions[git] )); then
+    _git_version_shim=1
+    function git {
+      if [[ $# -eq 1 && "$1" == version ]]; then
+        print -r -- "$_git_version_line"
+      else
+        command git "$@"
+      fi
+    }
+    # The theme's own probe is `$(git version | cut ...)` twice; even with the
+    # function above that is two subshells and two `cut`s, so answer it here.
+    if [[ -z "${DRACULA_GIT_NOLOCK:-}" ]]; then
+      autoload -Uz is-at-least
+      is-at-least 2.14 "${${(As: :)_git_version_line}[3]}" && DRACULA_GIT_NOLOCK=1 || DRACULA_GIT_NOLOCK=0
+    fi
+  fi
+  # The theme forks `locale | grep` to choose a 12h/24h clock format even when
+  # the clock segment is off (the default). Only let it when it is shown.
+  (( ${DRACULA_DISPLAY_TIME:-0} )) || : "${DRACULA_TIME_FORMAT:=%-H:%M}"
 
   #####################
   #      Plugins
@@ -66,6 +123,10 @@ if [[ -r "$ZINIT_HOME/zinit.zsh" ]]; then
   # Theme — sets PROMPT, so it cannot be deferred.
   zinit ice as"theme"
   zinit light dracula/zsh
+
+  # Everything that asks for the git version at load time has loaded.
+  (( ${_git_version_shim:-0} )) && unfunction git
+  unset _git_version_line _git_version_shim
 
   # Heavy plugins — loaded asynchronously after prompt appears (turbo mode).
   # Keep this list short: everything queued here waits an extra prompt.

@@ -35,8 +35,11 @@ alias emacs="emacs -nw"
 
 if [[ "$OSTYPE" == darwin* ]]; then
     # macOS ships BSD ls, but Homebrew coreutils may shadow it with GNU ls.
-    # Only this case is ambiguous, so it is the only one worth a subprocess.
-    if ls --version &>/dev/null; then
+    # Only this case is ambiguous, so it is the only one worth a subprocess —
+    # and not even that when zsh already knows `ls` resolves to the system one.
+    if [[ -n "${ZSH_VERSION:-}" && "${commands[ls]:-}" == /bin/ls ]]; then
+        alias ls='ls -oghG'              # BSD ls, no fork needed
+    elif ls --version &>/dev/null; then
         alias ls='ls -ogh --color=auto'  # GNU ls (coreutils)
     else
         alias ls='ls -oghG'              # BSD ls

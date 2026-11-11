@@ -100,6 +100,14 @@ in `.zshrc`:
   extra call re-runs `compaudit` over every `fpath` entry (~60ms). Note that
   `OMZL::completion.zsh` only sets zstyles — it does *not* call `compinit`.
 
+- **No forks on the happy path.** A fork+exec is ~1.5ms, and `git` on macOS
+  (an xcrun shim) is ~6ms. `.zshrc` therefore answers the `git version` probes
+  made by OMZP::git and the dracula theme from `$XDG_CACHE_HOME/zsh/git-version`
+  (refreshed in the background daily) via a `git` function that exists only
+  while the eager plugins load, presets `DRACULA_GIT_NOLOCK` /
+  `DRACULA_TIME_FORMAT`, and byte-compiles `zinit.zsh`. `.aliases` skips
+  `ls --version` when `$commands[ls]` is `/bin/ls`. Together: ~60ms → ~30ms.
+
 To profile, remember `zprof` only measures *functions*: top-level `source` and
 network I/O are invisible to it. Use `PS4='+$EPOCHREALTIME %N:%i> '` with
 `setopt xtrace` to get per-line wall-clock timings.
