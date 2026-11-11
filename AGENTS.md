@@ -148,6 +148,12 @@ Bootstrap scripts must stay bash 3.2 compatible (macOS `/bin/bash`): no
 
 Plugins via tpm: vim-tmux-navigator, tmux-sensible, tmux-yank. Vi-style copy with OSC 52 clipboard (works over SSH). Statusline uses terminal color indices (color-scheme agnostic).
 
+tpm is started with `run -b` (background). It and the plugins make ~100
+separate `tmux` client calls (~5ms each, ~500ms total), which a blocking `run`
+would put in front of the first window. Anything a plugin sets that is only
+read at pane creation must therefore be set in `.tmux.conf` itself — currently
+just `history-limit`, which tmux-sensible would otherwise set too late.
+
 ### Bootstrap scripts (`scripts/`)
 
 - `install.sh` — curl target at repo root; checks for git, clones repo via HTTPS, execs bootstrap
