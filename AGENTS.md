@@ -60,6 +60,13 @@ Lua config using lazy.nvim. Plugin specs are split by category in `lua/plugins/`
 - `navigation.lua` — navigation plugins
 - `git.lua` — git integration
 
+Startup is kept lean (~30ms): only the colorscheme, lualine, treesitter and
+nvim-lspconfig load eagerly. Telescope loads on its keys/`:Telescope`, and
+mason + mason-lspconfig load on `VeryLazy` — `lsp.lua` puts mason's `bin/` on
+`$PATH` itself so servers start before mason does. The python3/node/perl/ruby
+providers are disabled (the python one costs ~30ms on the first Python file).
+Profile with `nvim --startuptime` and `:Lazy profile`.
+
 ### Vim (`vim/`)
 
 Minimal, **plugin-free** vimscript fallback — no plugin manager (no vim-plug)

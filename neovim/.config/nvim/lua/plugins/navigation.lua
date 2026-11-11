@@ -5,6 +5,23 @@ return {
             'nvim-lua/plenary.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
         },
+        -- Loaded on first use (~6ms otherwise spent on every startup).
+        cmd = 'Telescope',
+        keys = {
+            {
+                '<leader>f',
+                function()
+                    local git_root = vim.fn.systemlist('git rev-parse --show-toplevel 2>/dev/null')[1]
+                    require('telescope.builtin').find_files({ cwd = git_root or vim.fn.getcwd(), hidden = true })
+                end,
+                desc = 'Find files',
+            },
+            { '<leader>b', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
+            { '<leader>sg', function() require('telescope.builtin').live_grep() end, desc = 'Live grep' },
+            { '<leader>sh', function() require('telescope.builtin').help_tags() end, desc = 'Help tags' },
+            { '<leader>sd', function() require('telescope.builtin').diagnostics() end, desc = 'Diagnostics' },
+            { '<leader>sr', function() require('telescope.builtin').resume() end, desc = 'Resume search' },
+        },
         config = function()
             local telescope = require('telescope')
             telescope.setup({
@@ -17,17 +34,6 @@ return {
             })
             -- fzf-native needs `make` + a C compiler; fall back to the Lua sorter.
             pcall(telescope.load_extension, 'fzf')
-
-            local builtin = require('telescope.builtin')
-            vim.keymap.set('n', '<leader>f', function()
-                local git_root = vim.fn.systemlist('git rev-parse --show-toplevel 2>/dev/null')[1]
-                builtin.find_files({ cwd = git_root or vim.fn.getcwd(), hidden = true })
-            end, { desc = 'Find files' })
-            vim.keymap.set('n', '<leader>b', builtin.buffers, { desc = 'Buffers' })
-            vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = 'Live grep' })
-            vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = 'Help tags' })
-            vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = 'Diagnostics' })
-            vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = 'Resume search' })
         end,
     },
 

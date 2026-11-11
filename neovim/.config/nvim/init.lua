@@ -57,11 +57,16 @@ vim.keymap.set('n', '<C-l>', '<C-w>l')
 vim.keymap.set('n', '<leader>tn', '<cmd>tabnew<cr>', { desc = 'New tab' })
 
 -- Diagnostic keymaps ([d / ]d are built in since 0.11)
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Diagnostic float' })
+-- Wrapped so that vim.diagnostic (~1ms) is only loaded when first needed.
+vim.keymap.set('n', '<leader>e', function() vim.diagnostic.open_float() end, { desc = 'Diagnostic float' })
 
--- Disable unused providers
+-- Disable unused providers. Nothing here uses remote plugins, and an enabled
+-- provider is not free: the stock python ftplugin probes for a python3 host
+-- (spawning interpreters, ~30ms) the first time a Python file is opened.
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_node_provider = 0
 
 -- The plugin specs use 0.11+ APIs (vim.lsp.config, vim.uv). On older builds
 -- (distro packages are often years behind) keep the options and keymaps above
@@ -89,4 +94,11 @@ vim.opt.rtp:append(vim.fn.stdpath('data') .. '/site')
 
 require('lazy').setup('plugins', {
     rocks = { hererocks = false },
+    performance = {
+        rtp = {
+            -- Bundled runtime plugins that are never used here. netrw stays:
+            -- oil.nvim is lazy-loaded, so `nvim <dir>` still relies on it.
+            disabled_plugins = { 'gzip', 'rplugin', 'tarPlugin', 'tohtml', 'tutor', 'zipPlugin' },
+        },
+    },
 })

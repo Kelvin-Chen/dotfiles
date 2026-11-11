@@ -1,11 +1,17 @@
 return {
     {
         'mason-org/mason.nvim',
+        cmd = { 'Mason', 'MasonInstall', 'MasonLog', 'MasonUninstall', 'MasonUninstallAll', 'MasonUpdate' },
         opts = {},
     },
 
     {
+        -- Loading mason and its registry costs ~12ms, and nothing on the
+        -- startup path needs it: servers are enabled by nvim-lspconfig below,
+        -- which only needs mason's bin directory on $PATH. So this loads after
+        -- the first paint, where it still installs anything missing.
         'mason-org/mason-lspconfig.nvim',
+        event = 'VeryLazy',
         dependencies = {
             'mason-org/mason.nvim',
             'neovim/nvim-lspconfig',
@@ -21,11 +27,14 @@ return {
 
     {
         'neovim/nvim-lspconfig',
-        dependencies = {
-            'mason-org/mason.nvim',
-            'mason-org/mason-lspconfig.nvim',
-        },
         config = function()
+            -- Servers installed by mason must be findable before mason itself
+            -- loads (see above). mason prepends the same directory later.
+            local mason_bin = vim.fn.stdpath('data') .. '/mason/bin'
+            if not vim.env.PATH:find(mason_bin, 1, true) then
+                vim.env.PATH = mason_bin .. ':' .. vim.env.PATH
+            end
+
             vim.api.nvim_create_autocmd('LspAttach', {
                 callback = function(event)
                     local map = function(keys, func, desc)
