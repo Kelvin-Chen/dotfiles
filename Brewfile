@@ -9,6 +9,7 @@ brew "tree"
 # Development
 brew "node"
 brew "jj"
+brew "gh"
 brew "shellcheck"
 brew "tree-sitter-cli"  # compiles nvim-treesitter parsers
 
@@ -21,3 +22,4 @@ brew "zellij"
 # Casks
 cask "kitty"
 cask "font-fira-code"     # font_family in kitty.conf
+cask "tailscale-app"      # standalone GUI + /usr/local/bin/tailscale CLI
