@@ -12,11 +12,15 @@ elif command -v dnf &>/dev/null; then
   PM="dnf"
 else
   echo "WARNING: No supported package manager found (apt, pacman or dnf). Skipping package install."
+  # `return` works when sourced by bootstrap.sh; `exit` covers running it
+  # directly. ShellCheck can't see the sourced case and flags `exit` as dead.
+  # shellcheck disable=SC2317
   return 0 2>/dev/null || exit 0
 fi
 
 if [[ "$EUID" -ne 0 ]] && ! command -v sudo &>/dev/null; then
   echo "WARNING: sudo is required for package installs. Skipping package install."
+  # shellcheck disable=SC2317  # see above
   return 0 2>/dev/null || exit 0
 fi
 

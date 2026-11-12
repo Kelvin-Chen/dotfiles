@@ -50,6 +50,8 @@ if [[ ! -f "$HOME/.config/git/gitconfig" ]]; then
   prompt GIT_NAME  "  Git name"
   prompt GIT_EMAIL "  Git email"
 else
+  # The ~ is display text in a message, not a path to expand.
+  # shellcheck disable=SC2088
   info "~/.config/git/gitconfig already exists — skipping git identity prompt."
 fi
 

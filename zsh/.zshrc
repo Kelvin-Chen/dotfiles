@@ -121,7 +121,6 @@ if [[ -r "$ZINIT_HOME/zinit.zsh" ]]; then
     OMZP::bazel
 
   # Theme — sets PROMPT, so it cannot be deferred.
-  zinit ice as"theme"
   zinit light dracula/zsh
 
   # Everything that asks for the git version at load time has loaded.
